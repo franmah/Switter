@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="38dp"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:id="@+id/profilePicture_homeFragment_ImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/logout_homeFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/search_homeFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="search" />
+
+
+        <TextView
+            android:id="@+id/newTweet_homeFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="new tweet" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/feed_homeFragment_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/feedString_homeFragment" />
+
+        <TextView
+            android:id="@+id/story_homeFragment_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/storyString_homeFragment" />
+
+        <TextView
+            android:id="@+id/following_homeFragment_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/followingString_homeFragment" />
+
+        <TextView
+            android:id="@+id/followers_homeFragment_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/followersString_homeFragment" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

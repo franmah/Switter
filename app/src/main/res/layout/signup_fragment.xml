@@ -7,7 +7,8 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingBottom="40dp">
 
 
         <LinearLayout
@@ -15,15 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/email_signup_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
             <EditText
-                android:id="@+id/email_signup_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:id="@+id/email_signUpFragment_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="email"/>
 
         </LinearLayout>
 
@@ -32,37 +29,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/password_signup_imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
             <EditText
-                android:id="@+id/password_signup_editText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:id="@+id/password_signUpFragment_editText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="password"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center">
 
             <Switch
-                android:id="@+id/showPassword_signup_switch"
+                android:id="@+id/showPassword_signUpFragment_switch"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:paddingEnd="20dp" />
 
             <TextView
-                android:id="@+id/showPassword_signup_textView"
+                android:id="@+id/showPassword_signUpFragment_editText"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="@string/showPasswordView_signUpFragment"/>
+
 
         </LinearLayout>
 
-
-
+        <Button
+            android:id="@+id/signUp_signUpFragment_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/signUp_buttonView_signUpFragment"/>
 
     </LinearLayout>
 

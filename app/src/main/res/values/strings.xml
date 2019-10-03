@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">Switter</string>
+
+    <!-- login_fragment.xml -->
+    <string name="signInView_loginFragment">SignIn</string>
+    <string name="signUpView_loginFragment">SignUp</string>
+
+    <!-- signin_fragment.xml -->
+    <string name="signIn_buttonView_signInFragment">Sign in</string>
+
+    <!-- signup_fragment.xmp -->
+    <string name="showPasswordView_signUpFragment">Show password</string>
+    <string name="signUp_buttonView_signUpFragment">Sign up</string>
+
+    <!-- signup_info_fragment.xml -->
+    <string name="editPhotoView_signUpInfoActivity">Edit photo</string>
+    <string name="continueButton_signUpInfoActivity">Continue</string>
+
+
+    <!-- home_fragment.xml -->
+    <string name="feedString_homeFragment">Feed</string>
+    <string name="storyString_homeFragment">Story</string>
+    <string name="followingString_homeFragment">Following</string>
+    <string name="followersString_homeFragment">Followers</string>
+
 </resources>

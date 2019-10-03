@@ -19,8 +19,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = "LoginFragment";
 
-    private FragmentManager fragmentManager = getChildFragmentManager();
-
     private ImageView mLogoImageView;
     private TextView mSignInTextView;
     private TextView mSignUpTextView;
@@ -36,20 +34,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "Creating views");
+        Log.i(TAG, "onCreateView()");
 
         View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-        setViews(view);
+        setUpViews(view);
         getFragment();
 
-
-
         return view;
-
     }
 
-    private void setViews(View view){
+    private void setUpViews(View view){
         Log.i(TAG, "Setting up views");
 
         mLogoImageView = (ImageView) view.findViewById(R.id.logo_loginFragment_ImageView);
@@ -57,7 +52,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         mSignUpTextView = (TextView) view.findViewById(R.id.signUp_loginFragment_textView);
 
         // set logo image
-        mLogoImageView.setImageResource(R.drawable.ic_logoTwitter);
+        // TODO: replace image by actual logo
+        mLogoImageView.setImageResource(R.mipmap.ic_logo_twitter_final);
 
         // Set listener:
         mSignInTextView.setOnClickListener(this);
@@ -90,6 +86,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void getFragment(){
         Log.i(TAG, "getting new fragment");
 
+        FragmentManager fragmentManager = getChildFragmentManager();
+
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer_loginFragment_FrameLayout);
 
         if(fragment == null){ // show signInFragment by default
@@ -106,11 +104,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
      * Update the fragment shown in the main activity
      * Once the user login this function tells the main activity to re-check which fragment to show.
      */
-    private void changeSuperFragment(){
+    public void changeSuperFragment(){
         Log.i(TAG, "requesting MainActivity to switch fragment");
         Activity mainActivityInstance = getActivity();
         if(mainActivityInstance instanceof MainActivity){
-            ((MainActivity) mainActivityInstance).getFragment();
             ((MainActivity) mainActivityInstance).getFragment();
         }
     }

@@ -5,9 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.fmahieu.switter.ModelLayer.models.User;
+import com.fmahieu.switter.ModelLayer.models.CurrentUser;
 import com.fmahieu.switter.R;
 
 public class MainActivity extends AppCompatActivity{
@@ -30,7 +29,7 @@ public class MainActivity extends AppCompatActivity{
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer_mainActivity_FrameLayout);
 
         if(fragment == null){
-            if(User.getUserInstance().isLoggedIn()){
+            if(CurrentUser.getUserInstance().isLoggedIn()){
                 fragment = new HomeFragment();
             }
             else{
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
             fragmentManager.beginTransaction().add(R.id.fragmentContainer_mainActivity_FrameLayout, fragment).commit();
         }
         else{
-            if(User.getUserInstance().isLoggedIn()){
+            if(CurrentUser.getUserInstance().isLoggedIn()){
                 fragment = new HomeFragment();
             }
             else{
