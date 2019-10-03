@@ -1,9 +1,12 @@
 package com.fmahieu.switter.Views;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.fmahieu.switter.R;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private final String TAG = "HomeFragment";
+
+    private FragmentManager fragmentManager = getChildFragmentManager();
 
     private ImageView mProfilePicture;
     private TextView mLogout;
@@ -73,15 +78,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        Intent intent;
+
         switch(v.getId()){
             case R.id.logout_homeFragment:
-// TODO: call presenter to erase value
+                updateSuperFragment(); // will tell MainActivity to switch fragment
                 break;
             case R.id.search_homeFragment:
-// TODO: get to search activity
+                intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
                 break;
             case R.id.newTweet_homeFragment:
-// TODO : get to  new tweet activity
+                intent = new Intent(getActivity(), NewStatusActivity.class);
+                startActivity(intent);
                 break;
             case R.id.feed_homeFragment_TextView:
                 setAllShowTabFalse();
@@ -94,8 +103,24 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 getFragment();
                 break;
             case  R.id.following_homeFragment_TextView:
+                setAllShowTabFalse();
+                showFollowing = true;
+                getFragment();
+                break;
+            case R.id.followers_homeFragment_TextView:
+                setAllShowTabFalse();
+                showFollowers = true;
+                getFragment();
+                break;
 
+        }
+    }
 
+    public void updateSuperFragment(){
+        Log.i(TAG, "requesting MainActivity to switch fragment");
+        Activity mainActivityInstance = getActivity();
+        if(mainActivityInstance instanceof MainActivity){
+            ((MainActivity) mainActivityInstance).getFragment();
         }
     }
 
@@ -104,5 +129,32 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         showStory = false;
         showFollowing = false;
         showFollowers = false;
+    }
+
+    private void getFragment(){
+        Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer_mainActivity_FrameLayout);
+
+        if(fragment == null){
+            // show the feed by default
+            fragment = new FeedFragment();
+
+            fragmentManager.beginTransaction().add(R.id.fragmentContainer_mainActivity_FrameLayout, fragment).commit();
+        }
+        else{
+            if(showFeed){
+                fragment = new FeedFragment();
+            }
+            else if(showStory){
+                fragment = new StoryFragment();
+            }
+            else if(showFollowing){
+                //fragment = new FollowingFragment();
+            }
+            else if(showFollowers){
+                //fragment = new FollowersFragment();
+            }
+
+            fragmentManager.beginTransaction().replace(R.id.fragmentContainer_homeFragment_FrameLayout, fragment).commit();
+        }
     }
 }

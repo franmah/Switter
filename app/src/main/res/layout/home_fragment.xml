@@ -65,4 +65,10 @@
 
     </LinearLayout>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fragmentContainer_homeFragment_FrameLayout">
+    </FrameLayout>
+
 </LinearLayout>
