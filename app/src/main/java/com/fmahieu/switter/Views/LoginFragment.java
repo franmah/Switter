@@ -17,7 +17,7 @@ import com.fmahieu.switter.R;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 
-    private final String TAG = "LoginFragment";
+    private final String TAG = "__LoginFragment";
 
     private ImageView mLogoImageView;
     private TextView mSignInTextView;

@@ -13,18 +13,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fmahieu.switter.ModelLayer.models.Profile;
+import com.fmahieu.switter.Presenters.SignUpPresenter;
 import com.fmahieu.switter.R;
 
 // TODO: cleanup the layout file (replace outside linear layout by scroll)
 
 public class SignUpInfoActivity extends AppCompatActivity implements View.OnClickListener {
-    private final String TAG = "SignUpInfoActivity";
+    private final String TAG = "__SignUpInfoActivity";
     private static final String EMAIL_FROM_SIGNUP = "com.fmahieu.switter.Views.SignupInfoActivity.email_from_signup";
     private static final String PASSWORD_FROM_SIGNUP = "com.fmahieu.switter.Views.SignupInfoActivity.password_from_signup";
     private static final String SIGNUP_RESULT = "com.fmahieu.switter.Views.SignupInfoActivity.sendSignUpResult";
 
     // used to access storage to upload picture
     private static final int READ_REQUEST_CODE = 42;
+
+    private SignUpPresenter signUpPresenter = new SignUpPresenter();
+
+
+    private String email;
+    private String password;
 
     private ImageView mProfilePicture;
     private TextView mEditPhoto;
@@ -52,6 +60,10 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "activity started");
+
+        // retrieve info from intent
+        email = getIntent().getStringExtra(EMAIL_FROM_SIGNUP);
+        password = getIntent().getStringExtra(PASSWORD_FROM_SIGNUP);
 
         setContentView(R.layout.signup_info_activity);
         setUpViews();
@@ -84,6 +96,7 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.continue_signUpInfoActivity_button:
                 // TODO: start async function that calls signupPresenter and then return result
+                signUpPresenter.signUserUp();
                 setSignUpResult(true);
                 break;
         }
@@ -91,11 +104,13 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
     }
 
     private void setSignUpResult(boolean isUserSignedUp) {
+        Log.i(TAG, "setting the result");
         Intent data = new Intent();
         data.putExtra(SIGNUP_RESULT, isUserSignedUp);
         setResult(RESULT_OK, data);
 
         // kill the activity to return to the previous fragment and show home fragment
+        Log.i(TAG, "about to return (finish())");
         finish();
     }
 
@@ -127,6 +142,10 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
                 uri = resultData.getData();
                 Log.i(TAG, "Uri: " + uri.toString());
                 mProfilePicture.setImageURI(uri);
+
+                // TODO: remove:
+                Profile profile = Profile.getUserInstance();
+                profile.setPicture(uri);
             }
         }
     }

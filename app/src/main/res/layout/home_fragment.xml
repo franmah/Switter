@@ -5,23 +5,30 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="38dp"
+        android:layout_height="93dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/profilePicture_homeFragment_ImageView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingEnd="20dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true" />
 
         <TextView
             android:id="@+id/logout_homeFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="47dp"
+            android:layout_height="56dp"
+            android:gravity="center"
+            android:paddingEnd="0dp" />
 
         <TextView
             android:id="@+id/search_homeFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingEnd="20dp"
             android:text="search" />
 
 
@@ -29,46 +36,16 @@
             android:id="@+id/newTweet_homeFragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingEnd="20dp"
             android:text="new tweet" />
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="36dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/feed_homeFragment_TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/feedString_homeFragment" />
-
-        <TextView
-            android:id="@+id/story_homeFragment_TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/storyString_homeFragment" />
-
-        <TextView
-            android:id="@+id/following_homeFragment_TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/followingString_homeFragment" />
-
-        <TextView
-            android:id="@+id/followers_homeFragment_TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/followersString_homeFragment" />
-
-
-    </LinearLayout>
-
     <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fragmentContainer_homeFragment_FrameLayout">
-    </FrameLayout>
+        android:id="@+id/fragmentContainer_homeFragment_FrameLayout"
+        android:layout_width="match_parent"
+        android:layout_height="601dp"
+        android:paddingTop="10dp"/>
 
 </LinearLayout>

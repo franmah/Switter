@@ -17,10 +17,10 @@
     <string name="continueButton_signUpInfoActivity">Continue</string>
 
 
-    <!-- home_fragment.xml -->
-    <string name="feedString_homeFragment">Feed</string>
-    <string name="storyString_homeFragment">Story</string>
-    <string name="followingString_homeFragment">Following</string>
-    <string name="followersString_homeFragment">Followers</string>
+    <!-- content_fragment.xml -->
+    <string name="feedString_contentFragment">Feed</string>
+    <string name="storyString_contentFragment">Story</string>
+    <string name="followingString_contentFragment">Following</string>
+    <string name="followersString_contentFragment">Followers</string>
 
 </resources>

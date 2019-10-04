@@ -2,14 +2,13 @@ package com.fmahieu.switter.Presenters;
 
 import com.fmahieu.switter.ModelLayer.models.Profile;
 
-public class SignUpPresenter {
+public class MainActivityPresenter {
 
     private Profile profile = Profile.getUserInstance();
 
-    public SignUpPresenter(){}
+    public MainActivityPresenter(){}
 
-    public void signUserUp(){
-        profile.setLoggedIn(true);
+    public boolean isUserLoggedIn(){
+        return profile.isLoggedIn();
     }
-
 }

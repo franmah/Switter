@@ -14,11 +14,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.fmahieu.switter.Presenters.SignInPresenter;
 import com.fmahieu.switter.R;
 
 public class SignInFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = "SignInFragment";
+
+    private SignInPresenter signInPresenter = new SignInPresenter();
 
     private EditText mHandleEditText;
     private EditText mPasswordEditText;
@@ -57,7 +60,13 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        // TODO: pass input to SignInPresenter break;
+        // TODO: pass input to SignInPresenter and check if the user is connected
+        signInPresenter.connectUser();
+
+        Fragment loginFragment = getParentFragment();
+        if(loginFragment instanceof LoginFragment){
+            ((LoginFragment) loginFragment).changeSuperFragment();
+        }
 
 
     }

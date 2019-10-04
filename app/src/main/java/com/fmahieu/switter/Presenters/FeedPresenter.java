@@ -4,7 +4,9 @@ public class FeedPresenter {
 
     public FeedPresenter(){}
 
-    public void updateFeed(){}
+    // retrieve the next feed page from the server
+    public void getNextFeedPage(){}
 
-    public void getStatus(){}
+
+
 }

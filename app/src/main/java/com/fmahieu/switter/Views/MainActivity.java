@@ -6,12 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.fmahieu.switter.ModelLayer.models.CurrentUser;
+import com.fmahieu.switter.ModelLayer.models.Profile;
+import com.fmahieu.switter.Presenters.MainActivityPresenter;
 import com.fmahieu.switter.R;
 
 public class MainActivity extends AppCompatActivity{
-    private final String TAG = "MainActivity";
+    private final String TAG = "__MainActivity";
 
+    private MainActivityPresenter mMainActivityPresenter = new MainActivityPresenter();
     private FragmentManager fragmentManager = getSupportFragmentManager();
 
     @Override
@@ -26,10 +28,13 @@ public class MainActivity extends AppCompatActivity{
     public void getFragment(){
         Log.i(TAG, "getting fragment");
 
+        boolean isUserLoggedIn = mMainActivityPresenter.isUserLoggedIn();
+
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer_mainActivity_FrameLayout);
 
+        Log.i(TAG, "FLAG2");
         if(fragment == null){
-            if(CurrentUser.getUserInstance().isLoggedIn()){
+            if(isUserLoggedIn){
                 fragment = new HomeFragment();
             }
             else{
@@ -39,7 +44,7 @@ public class MainActivity extends AppCompatActivity{
             fragmentManager.beginTransaction().add(R.id.fragmentContainer_mainActivity_FrameLayout, fragment).commit();
         }
         else{
-            if(CurrentUser.getUserInstance().isLoggedIn()){
+            if(isUserLoggedIn){
                 fragment = new HomeFragment();
             }
             else{

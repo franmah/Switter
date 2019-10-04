@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout_statusHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="20dp">
+
+        <ImageView
+            android:id="@+id/profilePicture_imageView_statusHolder"
+            android:layout_width="103dp"
+            android:layout_height="86dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true" />
+
+        <TextView
+            android:id="@+id/profileName_textView_statusHolder"
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="NAME" />
+
+        <TextView
+            android:id="@+id/handle_TextView_statusHolder"
+            android:layout_width="87dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="HANDLE" />
+
+        <TextView
+            android:id="@+id/date_textView_statusHolder"
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="SETP 11" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_TextView_statusHolder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop= "10dp"
+        android:paddingBottom="10dp"/>
+
+    <ImageView
+        android:id="@+id/pictureAttachment_statusHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true" />
+
+
+
+</LinearLayout>

@@ -21,7 +21,7 @@ import com.fmahieu.switter.R;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener {
 
-    private final String TAG = "SignUpFragment";
+    private final String TAG = "__SignUpFragment";
     private static final int SIGNUP_RESPONSE_CODE = 12;
 
     private EditText mEmailEditText;
@@ -81,16 +81,32 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.i(TAG, "received a result from SignUpInfoActivity");
         if (resultCode != Activity.RESULT_OK) {
-            return;
+            // TODO: show meaningfull error
+            makeToast("Error");
         }
 
         if (requestCode == SIGNUP_RESPONSE_CODE) {
             if (data == null) {
-                return;
+                // TODO show meaningful error
+                makeToast("Error");
             }
-            // TODO: will probably have to replace by a response object containing an error.
+
             boolean isUserSignedUp = SignUpInfoActivity.wasUserSignedUp(data);
+            if(isUserSignedUp){
+                Log.i(TAG, "user has successfully signed in");
+                // the user has successfully logged in
+                // tell LoginFragment to let MainActivity know the user has logged in
+                Fragment loginFragment = getParentFragment();
+                if(loginFragment instanceof LoginFragment){
+                    ((LoginFragment) loginFragment).changeSuperFragment();
+                }
+            }
+            else{
+                //TODO show meaningful error message;
+                makeToast("error");
+            }
         }
     }
 
@@ -99,7 +115,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             // TODO: find a way to call change fragment inside LoginFragment
         }
     }
-
 
 
 }
