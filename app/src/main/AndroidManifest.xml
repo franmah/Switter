@@ -20,7 +20,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".Views.SignUpInfoActivity" />
-        <activity android:name=".Views.StatusActivity"/>
+        <activity android:name=".Views.StatusActivity" />
+        <activity android:name=".Views.UserActivity" />
+        <activity
+            android:name=".Views.NewStatusActivity"
+            android:theme="@style/AppTheme.PopOutActivityStyle" />
+        <activity android:name=".Views.UpdateProfilePictureActivity"
+            android:theme="@style/AppTheme.PopOutActivityStyle"/>
+        <activity android:name=".Views.HashtagActivity" />
     </application>
 
 </manifest>

@@ -7,9 +7,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fmahieu.switter.ModelLayer.models.Status;
-import com.fmahieu.switter.ModelLayer.models.StatusFocus;
+import com.fmahieu.switter.ModelLayer.models.singleton.StatusFocus;
 import com.fmahieu.switter.R;
 
+/**
+ * Show a status the user clicked on
+ */
 public class StatusActivity extends AppCompatActivity {
 
     private StatusFocus mStatusFocus;
@@ -26,8 +29,9 @@ public class StatusActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.status_activity);
+        setTitle("Status");
 
-        mStatusFocus = StatusFocus.getUserInstance();
+        mStatusFocus = StatusFocus.getStatusFocusInstance();
         status = mStatusFocus.getStatus();
 
         setUpWidgets();
@@ -45,11 +49,11 @@ public class StatusActivity extends AppCompatActivity {
     }
 
     private void displayStatus(){
-        profilePic.setImageURI(status.getProfilePicture());
-        profileName.setText( status.getFirstName());
-        handle.setText( status.getHandle());
-        date.setText( status.getDate());
-        text.setText( status.getText());
-        if ( status.getPicture() != null) attachmentPicture.setImageURI( status.getPicture());
+        profilePic.setImageURI(status.getProfilePicture() );
+        profileName.setText( status.getFirstName() );
+        handle.setText( status.getHandle().getHandleString() );
+        date.setText( status.getDate() );
+        text.setText( status.getText() );
+        if ( status.getPicture() != null ) attachmentPicture.setImageURI( status.getPicture() );
     }
 }

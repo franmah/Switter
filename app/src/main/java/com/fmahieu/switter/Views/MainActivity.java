@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.fmahieu.switter.ModelLayer.models.Profile;
 import com.fmahieu.switter.Presenters.MainActivityPresenter;
 import com.fmahieu.switter.R;
 

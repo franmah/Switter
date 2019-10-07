@@ -61,7 +61,7 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         // TODO: pass input to SignInPresenter and check if the user is connected
-        signInPresenter.connectUser();
+        signInPresenter.connectUser( mHandleEditText.getText().toString(), mPasswordEditText.getText().toString() );
 
         Fragment loginFragment = getParentFragment();
         if(loginFragment instanceof LoginFragment){

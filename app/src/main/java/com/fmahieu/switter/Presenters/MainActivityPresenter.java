@@ -1,6 +1,6 @@
 package com.fmahieu.switter.Presenters;
 
-import com.fmahieu.switter.ModelLayer.models.Profile;
+import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 
 public class MainActivityPresenter {
 

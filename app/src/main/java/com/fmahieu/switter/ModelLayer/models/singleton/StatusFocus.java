@@ -1,5 +1,7 @@
-package com.fmahieu.switter.ModelLayer.models;
+package com.fmahieu.switter.ModelLayer.models.singleton;
 
+
+import com.fmahieu.switter.ModelLayer.models.Status;
 
 /**
  * Status to focus on in Status Activity
@@ -8,7 +10,7 @@ public class StatusFocus {
 
     private static StatusFocus sStatusFocus;
 
-    public static StatusFocus getUserInstance() {
+    public static StatusFocus getStatusFocusInstance() {
         if (sStatusFocus == null){
             sStatusFocus = new StatusFocus();
         }

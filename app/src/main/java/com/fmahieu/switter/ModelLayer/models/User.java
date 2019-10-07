@@ -4,41 +4,26 @@ import android.net.Uri;
 
 public class User {
 
-    private static User user;
-
-    public static User getUserInstance() {
-        if (user == null){
-            user = new User();
-        }
-        return user;
-    }
-
-    private User(){
-    }
-
     private String firstName;
     private String lastName;
     private Handle handle;
-    private Uri picture;
-    private int numFollowers;
-    private int numFollowing;
-    private boolean isFollowedByProfile;
+    private Uri profilePicture;
+
+    public User(String firstName, String lastName, Handle handle, Uri profilePicture) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.handle = handle;
+        this.profilePicture = profilePicture;
+    }
 
     /** GETTERS AND SETTERS **/
+
     public String getFirstName() {
         return firstName;
     }
 
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
     }
 
     public Handle getHandle() {
@@ -49,35 +34,19 @@ public class User {
         this.handle = handle;
     }
 
-    public Uri getPicture() {
-        return picture;
+    public Uri getProfilePicture() {
+        return profilePicture;
     }
 
-    public void setPicture(Uri picture) {
-        this.picture = picture;
+    public void setProfilePicture(Uri profilePicture) {
+        this.profilePicture = profilePicture;
     }
 
-    public int getNumFollowers() {
-        return numFollowers;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setNumFollowers(int numFollowers) {
-        this.numFollowers = numFollowers;
-    }
-
-    public int getNumFollowing() {
-        return numFollowing;
-    }
-
-    public void setNumFollowing(int numFollowing) {
-        this.numFollowing = numFollowing;
-    }
-
-    public boolean isFollowedByProfile() {
-        return isFollowedByProfile;
-    }
-
-    public void setFollowedByProfile(boolean followedByProfile) {
-        isFollowedByProfile = followedByProfile;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }

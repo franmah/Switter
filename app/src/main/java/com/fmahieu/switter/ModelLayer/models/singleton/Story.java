@@ -1,4 +1,7 @@
-package com.fmahieu.switter.ModelLayer.models;
+package com.fmahieu.switter.ModelLayer.models.singleton;
+
+import com.fmahieu.switter.ModelLayer.models.Handle;
+import com.fmahieu.switter.ModelLayer.models.Status;
 
 import java.util.List;
 

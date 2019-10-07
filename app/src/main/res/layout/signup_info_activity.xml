@@ -37,17 +37,20 @@
             <EditText
                 android:id="@+id/firstName_signUpInfoActivity_editText"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Mister"/>
 
             <EditText
                 android:id="@+id/lastName_signUpInfoActivity_editText"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="Test"/>
 
             <EditText
                 android:id="@+id/handle_signUpInfoActivity_editText"
                 android:layout_width="200dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="\@amazingHandle"/>
 
 
             <Button

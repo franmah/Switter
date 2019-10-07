@@ -10,35 +10,70 @@
 
         <ImageView
             android:id="@+id/profilePicture_homeFragment_ImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="80dp"
+            android:layout_height="83dp"
+            android:adjustViewBounds="true"
             android:paddingEnd="20dp"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true" />
+            android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/logout_homeFragment"
-            android:layout_width="47dp"
-            android:layout_height="56dp"
-            android:gravity="center"
-            android:paddingEnd="0dp" />
-
-        <TextView
-            android:id="@+id/search_homeFragment"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="168dp"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingEnd="20dp"
-            android:text="search" />
+            android:orientation="vertical">
 
 
-        <TextView
-            android:id="@+id/newTweet_homeFragment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingEnd="20dp"
-            android:text="new tweet" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/profile_textView_homeFragment"
+                    android:layout_width="66dp"
+                    android:layout_height="29dp"
+                    android:paddingLeft="20dp"
+                    android:text="Profile" />
+
+                <TextView
+                    android:id="@+id/logout_homeFragment"
+                    android:layout_width="102dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:paddingLeft="20dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="20dp"
+                    android:paddingBottom="5dp"
+                    android:text="Logout" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/search_homeFragment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|start|center_horizontal"
+                android:paddingLeft="20dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="5dp"
+                android:text="search" />
+
+
+            <TextView
+                android:id="@+id/newTweet_homeFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingLeft="20dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="5dp"
+                android:text="new tweet" />
+
+        </LinearLayout>
+
+
 
     </LinearLayout>
 

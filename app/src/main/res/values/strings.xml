@@ -23,4 +23,23 @@
     <string name="followingString_contentFragment">Following</string>
     <string name="followersString_contentFragment">Followers</string>
 
+    <!-- user_activity.xml -->
+    <string name="followString_button_userActivity">Follow</string>
+    <string name="unfollowString_button_userActivity">Unfollow</string>
+    <string name="defaultNameString_textView_userActivity">Mr Test</string>
+    <string name="defaultHandleString_textView_userActivity">\@myAmazingHandle</string>
+    <string name="followersString_textView_userActivity">followers</string>
+    <string name="followingString_textView_userActivity">following</string>
+
+
+    <!-- new_status_activity.xml -->
+    <string name="editVideoString_newStatusActivity">Add video</string>
+    <string name="editPictureString_newStatusActivity">Add picture</string>
+    <string name="sendButtonString_newStatusActivity">Send</string>
+
+    <!-- update_profile_picture_activity -->
+    <string name="checkBoxTextString_updateProfilePictureActivity">replace current profile picture</string>
+    <string name="selectPictureString_updateProfilePictureActivity">Select picture</string>
+    <string name="sendUpdatePicture_updateProfilePictureActivity">send</string>
+
 </resources>

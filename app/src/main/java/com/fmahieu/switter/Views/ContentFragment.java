@@ -56,15 +56,20 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         setUpWidgets(view);
 
         // TODO: in another thread:
-        // Update each instance: will request first page to display
-        mContentPresenter.updateFeed();
-        mContentPresenter.updateStory();
-        mContentPresenter.updateFollowing();
-        mContentPresenter.updateFollowers();
+        // Update each singleton: will request first page to display
+        updateContent();
 
         getFragment();
 
         return view;
+    }
+
+    private void updateContent(){
+        // Using each singletons' owner, ContentPresenter will fetch the data for the right user.
+        mContentPresenter.updateFeed();
+        mContentPresenter.updateStory();
+        mContentPresenter.updateFollowing();
+        mContentPresenter.updateFollowers();
     }
 
 
@@ -116,12 +121,14 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
     }
 
     private void getFragment(){
+        Log.i( TAG, "changing fragment" );
+
         FragmentManager fragmentManager = getChildFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer_contentFragment_frameLayout);
 
         if(fragment == null){
             // show the feed by default
-            Bundle bundle = StatusRecyclerFragment.createBundle(true);
+            Bundle bundle = StatusRecyclerFragment.createDisplayFeedBundle(true);
             fragment = new StatusRecyclerFragment();
             fragment.setArguments(bundle);
 
@@ -132,20 +139,24 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
             if(showFeed){
                 // tell StatusRecyclerFragment to use feed instance
-                bundle = StatusRecyclerFragment.createBundle(true);
+                bundle = StatusRecyclerFragment.createDisplayFeedBundle(true);
                 fragment = new StatusRecyclerFragment();
                 fragment.setArguments(bundle);
 
             }
             else if(showStory){
-                bundle = StatusRecyclerFragment.createBundle(false);
+                bundle = StatusRecyclerFragment.createDisplayFeedBundle(false);
                 fragment = new StatusRecyclerFragment();
             }
             else if(showFollowing){
-                //fragment = new FollowingFragment();
+                // let the recycler know it has to show following users
+                bundle = FollowRecyclerFragment.createBundle(true);
+                fragment = new FollowRecyclerFragment();
             }
             else if(showFollowers){
-                //fragment = new FollowersFragment();
+                bundle = FollowRecyclerFragment.createBundle(false);
+                fragment = new FollowRecyclerFragment();
+
             }
 
             fragment.setArguments(bundle);

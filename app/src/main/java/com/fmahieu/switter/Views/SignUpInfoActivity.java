@@ -13,7 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fmahieu.switter.ModelLayer.models.Profile;
+import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 import com.fmahieu.switter.Presenters.SignUpPresenter;
 import com.fmahieu.switter.R;
 
@@ -143,21 +143,11 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
                 Log.i(TAG, "Uri: " + uri.toString());
                 mProfilePicture.setImageURI(uri);
 
-                // TODO: remove:
+                // TODO: remove: acutally pass the infor to the presenter
                 Profile profile = Profile.getUserInstance();
                 profile.setPicture(uri);
             }
         }
     }
 
-    /* TODO: remove if not used (if used: should be processed in another thread.)
-    private void getBitmapFromUri(Uri uri) throws IOException {
-        ParcelFileDescriptor parcelFileDescriptor =
-                getContentResolver().openFileDescriptor(uri, "r");
-        FileDescriptor fileDescriptor = parcelFileDescriptor.getFileDescriptor();
-        Bitmap image = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-        parcelFileDescriptor.close();
-        mProfilePicture.setImageBitmap(image);
-    }
-    */
 }

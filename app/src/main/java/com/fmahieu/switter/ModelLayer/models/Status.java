@@ -2,9 +2,7 @@ package com.fmahieu.switter.ModelLayer.models;
 
 import android.net.Uri;
 
-import java.io.Serializable;
-
-public class Status implements Serializable {
+public class Status {
 
     private Uri profilePicture;
     private String firstName;

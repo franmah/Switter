@@ -12,10 +12,10 @@
 
         <ImageView
             android:id="@+id/profilePicture_imageView_statusHolder"
-            android:layout_width="103dp"
-            android:layout_height="86dp"
-            android:scaleType="centerCrop"
-            android:adjustViewBounds="true" />
+            android:layout_width="71dp"
+            android:layout_height="63dp"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop" />
 
         <TextView
             android:id="@+id/profileName_textView_statusHolder"
@@ -45,15 +45,16 @@
         android:id="@+id/text_TextView_statusHolder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop= "10dp"
-        android:paddingBottom="10dp"/>
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:textSize="18sp" />
 
     <ImageView
         android:id="@+id/pictureAttachment_statusHolder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true" />
+        android:layout_width="135dp"
+        android:layout_height="106dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop" />
 
 
 

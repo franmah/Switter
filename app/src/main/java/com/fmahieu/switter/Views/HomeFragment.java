@@ -15,12 +15,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.fmahieu.switter.Presenters.ContentPresenter;
+import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 import com.fmahieu.switter.Presenters.HomePresenter;
 import com.fmahieu.switter.R;
 
-
-
+/**
+ *
+ */
 public class HomeFragment extends Fragment implements View.OnClickListener {
     private final String TAG = "__HomeFragment";
 
@@ -29,6 +30,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private Uri profilePicture;
 
     private ImageView mProfilePicture;
+    private TextView mProfileTextView;
     private TextView mLogout;
     private TextView mSearch;
     private TextView mNewTweet;
@@ -36,7 +38,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
-
         Log.i(TAG, "onCreate()");
     }
 
@@ -48,7 +49,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.home_fragment, container, false);
 
 
-        // Get user profile
+        // Update and get needed user profile
+        mHomePresenter.updateProfile();
         profilePicture = mHomePresenter.getProfilePicture();
 
         setUpViews(view);
@@ -60,23 +62,31 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private void setUpViews(View view){
         mProfilePicture = view.findViewById(R.id.profilePicture_homeFragment_ImageView);
+        mProfileTextView = view.findViewById(R.id.profile_textView_homeFragment);
         mLogout = view.findViewById(R.id.logout_homeFragment);
         mSearch = view.findViewById(R.id.search_homeFragment);
         mNewTweet = view.findViewById(R.id.newTweet_homeFragment);
 
+        mProfilePicture.setImageURI(profilePicture);
+
+        mProfileTextView.setOnClickListener(this);
         mLogout.setOnClickListener(this);
         mSearch.setOnClickListener(this);
         mNewTweet.setOnClickListener(this);
+        mProfilePicture.setOnClickListener(this);
 
-        mProfilePicture.setImageURI(profilePicture);
     }
 
+    /**
+     * Setup singletons owners
+     */
     private void setUpModelInstances(){
-        // set up each instance to know which user's data to display
-        mHomePresenter.setUpFeedUser();
-        mHomePresenter.setUpStoryUser();
-        mHomePresenter.setUpFollowingUser();
-        mHomePresenter.setUpFollowingUser();
+        // set the owner (as profile) for each singleton.
+        // the ContentFragment then can know which data to retrieve.
+        mHomePresenter.setUpFeedOwner();
+        mHomePresenter.setUpStoryOwner();
+        mHomePresenter.setUpFollowingOwner();
+        mHomePresenter.setUpFollowersOwner();
     }
 
 
@@ -86,6 +96,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         switch(v.getId()){
             case R.id.logout_homeFragment:
+                mHomePresenter.logOutUser();
                 updateSuperFragment(); // will tell MainActivity to switch to login fragment
                 break;
             case R.id.search_homeFragment:
@@ -96,6 +107,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 intent = new Intent(getActivity(), NewStatusActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.profilePicture_homeFragment_ImageView:
+                intent = new Intent(getActivity(), UpdateProfilePictureActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.profile_textView_homeFragment:
+                intent = UserActivity.newIntent(getContext(), Profile.getUserInstance().getHandle().getHandleString());
+                startActivity(intent);
         }
     }
 

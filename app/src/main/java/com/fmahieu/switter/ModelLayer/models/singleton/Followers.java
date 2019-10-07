@@ -1,5 +1,8 @@
-package com.fmahieu.switter.ModelLayer.models;
+package com.fmahieu.switter.ModelLayer.models.singleton;
 
+
+import com.fmahieu.switter.ModelLayer.models.Handle;
+import com.fmahieu.switter.ModelLayer.models.User;
 
 import java.util.List;
 
@@ -18,25 +21,26 @@ public class Followers {
 
     /** MEMBERS **/
 
-    private List<Handle> userHanles;
+    private List<User> users;
     private Handle followersOwner; //handle of the user's followers to display in recycler
 
     private Followers(){
     }
 
     /** GETTERS AND SETTERS **/
-    public List<Handle> getUserHanles() {
-        return userHanles;
+    public List<User> getUsers() {
+        return users;
     }
 
-    public void setUserHanles(List<Handle> userHanles) {
-        this.userHanles = userHanles;
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     public Handle getFollowersOwner() {
         return followersOwner;
     }
 
+    // When ContentFragment update the Followers singleton it fetches data using the owner handle.
     public void setFollowersOwner(Handle followersOwner) {
         this.followersOwner = followersOwner;
     }
