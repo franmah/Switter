@@ -29,9 +29,11 @@ public class HashtagActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hashtag_activity);
-        setTitle("Hashtag");
 
         String hashtagToShow = getIntent().getStringExtra(GET_HANDLE);
+
+
+        setTitle(new String("Hashtag - " + hashtagToShow));
 
         // update singleton HashtagFeed
         mHashtagActivityPresenter = new HashtagActivityPresenter();

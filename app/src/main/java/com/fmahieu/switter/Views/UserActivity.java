@@ -56,14 +56,13 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
 
         // get handle of user to display
         String userHandle = getIntent().getStringExtra(USER_HANDLE);
+        setTitle(userHandle);
 
         // TODO: remove this: will always show the user profile
         userHandle = Profile.getUserInstance().getHandle().getHandleString();
 
         // set owners of singletons (and update either Profile or UserUnique)
         mUserActivityPresenter.updateUserInfo( userHandle );
-
-        setTitle(userHandle);
 
         // check if user to show is current profile
         setUpUserToShow(userHandle);

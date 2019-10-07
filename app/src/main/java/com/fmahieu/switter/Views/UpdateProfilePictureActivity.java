@@ -132,6 +132,7 @@ public class UpdateProfilePictureActivity extends AppCompatActivity implements V
             if (resultData != null) {
                 uri = resultData.getData();
                 Log.i(TAG, "Uri: " + uri.toString());
+                profilePicture.setImageURI(uri);
                 picturePath = uri;
             }
         }

@@ -8,18 +8,20 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.text.InputType;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
 import com.fmahieu.switter.R;
 
-public class SignUpFragment extends Fragment implements View.OnClickListener {
+public class SignUpFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     private final String TAG = "__SignUpFragment";
     private static final int SIGNUP_RESPONSE_CODE = 12;
@@ -57,9 +59,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         mShowPasswordSwitch =  view.findViewById(R.id.showPassword_signUpFragment_switch);
         mSignUpButton = view.findViewById(R.id.signUp_signUpFragment_button);
 
-        // set the text in the EditText to password type
-        mPasswordEditText.setRawInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-
+        mShowPasswordSwitch.setOnCheckedChangeListener(this);
         mSignUpButton.setOnClickListener(this);
     }
 
@@ -72,6 +72,16 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                                                     mPasswordEditText.getText().toString());
         startActivityForResult(intent, SIGNUP_RESPONSE_CODE);
 
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if(isChecked){
+            mPasswordEditText.setTransformationMethod(null);
+        }
+        else{
+            mPasswordEditText.setTransformationMethod(new PasswordTransformationMethod());
+        }
     }
 
     private void makeToast(String message){

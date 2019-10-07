@@ -8,7 +8,9 @@ public class UpdateProfilePicturePresenter {
 
     private UpdateProfileLogic mUpdateProfileLogic;
 
-    public UpdateProfilePicturePresenter(){}
+    public UpdateProfilePicturePresenter(){
+        mUpdateProfileLogic = new UpdateProfileLogic();
+    }
 
     public void getUpdatedProfile(){
         // retrieve updated data for profile

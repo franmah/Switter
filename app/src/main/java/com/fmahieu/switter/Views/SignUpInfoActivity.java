@@ -34,6 +34,8 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
     private String email;
     private String password;
 
+    private Uri profileUri;
+
     private ImageView mProfilePicture;
     private TextView mEditPhoto;
     private EditText mFirstName;
@@ -96,7 +98,7 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.continue_signUpInfoActivity_button:
                 // TODO: start async function that calls signupPresenter and then return result
-                signUpPresenter.signUserUp();
+                signUpPresenter.signUserUp(profileUri, mFirstName.getText().toString(), mLastName.getText().toString(), mHandle.getText().toString());
                 setSignUpResult(true);
                 break;
         }
@@ -142,6 +144,7 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
                 uri = resultData.getData();
                 Log.i(TAG, "Uri: " + uri.toString());
                 mProfilePicture.setImageURI(uri);
+                profileUri = uri;
 
                 // TODO: remove: acutally pass the infor to the presenter
                 Profile profile = Profile.getUserInstance();
