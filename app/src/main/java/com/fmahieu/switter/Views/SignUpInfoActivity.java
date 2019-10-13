@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
-import com.fmahieu.switter.Presenters.SignUpPresenter;
+import com.fmahieu.switter.Presenters.LoginPresenter;
 import com.fmahieu.switter.R;
 
 // TODO: cleanup the layout file (replace outside linear layout by scroll)
@@ -28,7 +28,7 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
     // used to access storage to upload picture
     private static final int READ_REQUEST_CODE = 42;
 
-    private SignUpPresenter signUpPresenter = new SignUpPresenter();
+    private LoginPresenter signUpPresenter = new LoginPresenter();
 
 
     private String email;

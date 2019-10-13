@@ -4,8 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fmahieu.switter.Presenters.SignInPresenter;
+import com.fmahieu.switter.Presenters.LoginPresenter;
 import com.fmahieu.switter.R;
 
 public class SignInFragment extends Fragment implements View.OnClickListener {
 
     private final String TAG = "SignInFragment";
 
-    private SignInPresenter signInPresenter = new SignInPresenter();
+    private LoginPresenter mLoginPresenter = new LoginPresenter();
 
     private EditText mHandleEditText;
     private EditText mPasswordEditText;
@@ -60,8 +58,8 @@ public class SignInFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        // TODO: pass input to SignInPresenter and check if the user is connected
-        signInPresenter.connectUser( mHandleEditText.getText().toString(), mPasswordEditText.getText().toString() );
+        // TODO: pass input to  check if the user is connected
+        mLoginPresenter.connectUser( mHandleEditText.getText().toString(), mPasswordEditText.getText().toString() );
 
         Fragment loginFragment = getParentFragment();
         if(loginFragment instanceof LoginFragment){
