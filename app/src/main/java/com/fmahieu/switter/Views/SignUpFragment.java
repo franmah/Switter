@@ -2,6 +2,7 @@ package com.fmahieu.switter.Views;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,8 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.fmahieu.switter.ModelLayer.models.Handle;
+import com.fmahieu.switter.ModelLayer.models.Status;
 import com.fmahieu.switter.R;
 
 public class SignUpFragment extends Fragment implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
@@ -47,6 +50,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
         View view = inflater.inflate(R.layout.signup_fragment, container, false);
 
         setUpViews(view);
+
+
 
         return view;
     }

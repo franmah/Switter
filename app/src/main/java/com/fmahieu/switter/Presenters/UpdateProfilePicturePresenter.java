@@ -20,14 +20,14 @@ public class UpdateProfilePicturePresenter {
      * update current profile picture and add picture to the user's list
      */
     public void updateCurrentProfilePicture(Uri picturePath){
-        mUpdateProfileLogic.SetNewProfilePicture(true);
+        mUpdateProfileLogic.setNewProfilePicture(true);
     }
 
     /**
      * add a picture to the current user's profile picture list (doesn't update profile picture)
      */
     public void addPictureToProfileList(Uri picturePath){
-        mUpdateProfileLogic.SetNewProfilePicture(false);
+        mUpdateProfileLogic.setNewProfilePicture(false);
 
     }
 

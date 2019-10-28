@@ -2,6 +2,8 @@ package com.fmahieu.switter.ModelLayer.models;
 
 import android.net.Uri;
 
+import java.util.List;
+
 public class Status {
 
     private Uri profilePicture;
@@ -9,6 +11,7 @@ public class Status {
     private String lastName;
     private Handle handle;
     private String date;
+    private List<Hashtag> hashtags;
     private String text;
     private Uri picture;
     private Uri video;

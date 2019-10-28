@@ -10,7 +10,7 @@ public class UpdateProfileLogic {
      *
      * @param replaceProfilePicture: if false will only add the picture to the user's pic list.
      */
-    public void SetNewProfilePicture(boolean replaceProfilePicture){}
+    public void setNewProfilePicture(boolean replaceProfilePicture){}
 
     public void followUser(){}
 
