@@ -102,7 +102,7 @@ public class UserActivity extends AppCompatActivity implements View.OnClickListe
             // hide follow button
             mFollowButton.setVisibility(View.GONE);
 
-            mProfilePic.setImageURI(profile.getPicture());
+            mProfilePic.setImageBitmap(profile.getPicture().getBitmapImage());
             mUserName.setText(new String(profile.getFirstName() + " " + profile.getLastName()));
             mHandle.setText(profile.getHandle().getHandleString());
             mNumFollowers.setText( String.valueOf(profile.getNumFollowers()) );

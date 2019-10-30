@@ -117,7 +117,7 @@ public class FollowRecyclerFragment extends Fragment {
 
         public void bind(User user){
             this.user = user;
-            profilePicture.setImageURI( user.getProfilePicture() );
+            profilePicture.setImageBitmap( user.getProfilePicture().getBitmapImage() );
             userName.setText( new String(user.getFirstName() + user.getLastName()) );
             handle.setText( user.getHandle().getHandleString() );
         }

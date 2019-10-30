@@ -3,8 +3,10 @@ package com.fmahieu.switter.Views;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,7 +14,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.fmahieu.switter.ModelLayer.models.Image;
+import com.fmahieu.switter.ModelLayer.models.LoginResult;
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 import com.fmahieu.switter.Presenters.LoginPresenter;
 import com.fmahieu.switter.R;
@@ -28,8 +33,9 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
     // used to access storage to upload picture
     private static final int READ_REQUEST_CODE = 42;
 
-    private LoginPresenter signUpPresenter = new LoginPresenter();
+    private LoginPresenter mLoginPresenter = new LoginPresenter();
 
+    boolean hasUserLoggedIn = false;
 
     private String email;
     private String password;
@@ -42,6 +48,8 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
     private  EditText mLastName;
     private EditText mHandle;
     private Button mContinue;
+    private EditText mCodeEditText;
+    private Button mCodeButton;
 
 
     public static Intent newIntent(Context packageContext, String email, String password){
@@ -81,7 +89,10 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
         mLastName = findViewById(R.id.lastName_signUpInfoActivity_editText);
         mHandle = findViewById(R.id.handle_signUpInfoActivity_editText);
         mContinue = findViewById(R.id.continue_signUpInfoActivity_button);
+        mCodeEditText = findViewById(R.id.codeConfirm_signUpInfoActivity);
+        mCodeButton = findViewById(R.id.codeConfirmButton_signUpInfoActivity);
 
+        mCodeButton.setOnClickListener(this);
         mEditPhoto.setOnClickListener(this);
         mContinue.setOnClickListener(this);
 
@@ -91,20 +102,50 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View v) {
         Log.i(TAG, "a click has been detected");
+        LoginResult result;
 
         switch (v.getId()){
             case R.id.editPhoto_signUpInfoActivity_EditText:
                 selectPictureInStorage();
                 break;
+
             case R.id.continue_signUpInfoActivity_button:
-                // TODO: start async function that calls signupPresenter and then return result
-                signUpPresenter.signUserUp(profileUri, mFirstName.getText().toString(), mLastName.getText().toString(), mHandle.getText().toString());
-                setSignUpResult(true);
+                 mLoginPresenter.signUserUp(profileUri, mFirstName.getText().toString(),
+                         mLastName.getText().toString(), mHandle.getText().toString(), password, email);
+
+                 if(Profile.getUserInstance().needToConfirmSignUp()){
+                     makeToast("Please enter the code received by email and confirm");
+                 }
+                 else{
+                     makeToast("Unable to sign user up");
+                 }
+                break;
+
+            case R.id.codeConfirmButton_signUpInfoActivity:
+                // confirm and connect user
+                mLoginPresenter.confirmCode(mCodeEditText.getText().toString(), mHandle.getText().toString(),
+                        password);
+                if(Profile.getUserInstance().isLoggedIn()){
+                    setSignUpResult(hasUserLoggedIn);
+                }
+                else{
+                    makeToast("Unable to confirm code");
+                }
                 break;
         }
 
     }
 
+    private void makeToast(String message){
+        Log.i(TAG, "making toast: " + message);
+        Toast.makeText(getParent(), message, Toast.LENGTH_SHORT).show();
+
+    }
+
+    /**
+     * tells SignUpFragment that the user has successfully signed up/in
+     * @param isUserSignedUp
+     */
     private void setSignUpResult(boolean isUserSignedUp) {
         Log.i(TAG, "setting the result");
         Intent data = new Intent();
@@ -116,7 +157,8 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
         finish();
     }
 
-    /** GET PICTURE **/
+    /** GET PICTURE FROM STORAGE **/
+
     private void selectPictureInStorage(){
         Log.i(TAG, "selecting picture from storage");
 
@@ -142,13 +184,21 @@ public class SignUpInfoActivity extends AppCompatActivity implements View.OnClic
             Uri uri = null;
             if (resultData != null) {
                 uri = resultData.getData();
-                Log.i(TAG, "Uri: " + uri.toString());
+                Log.i(TAG, "Uri: " + uri.getPath());
                 mProfilePicture.setImageURI(uri);
                 profileUri = uri;
 
-                // TODO: remove: acutally pass the infor to the presenter
+                // TODO: remove: actually pass the pic to the presenter
+                Image image = new Image();
+                try {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), uri);
+                    image.setBitmapImage(bitmap);
+                }
+                catch (Exception e){
+                    Log.e(TAG, "ERROR ",  e);
+                }
                 Profile profile = Profile.getUserInstance();
-                profile.setPicture(uri);
+                profile.setPicture(image);
             }
         }
     }

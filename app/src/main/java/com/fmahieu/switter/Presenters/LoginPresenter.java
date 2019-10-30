@@ -1,9 +1,12 @@
 package com.fmahieu.switter.Presenters;
 
-import android.net.Uri;
 
+import android.net.Uri;
 import com.fmahieu.switter.ModelLayer.ApplicationLogic.LoginLogic;
+import com.fmahieu.switter.ModelLayer.models.ConfirmRequest;
 import com.fmahieu.switter.ModelLayer.models.Handle;
+import com.fmahieu.switter.ModelLayer.models.SignInRequest;
+import com.fmahieu.switter.ModelLayer.models.SignUpRequest;
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 
 public class LoginPresenter {
@@ -15,12 +18,12 @@ public class LoginPresenter {
 
     public LoginPresenter(){}
 
-    public void signUserUp(Uri uri,String firstName, String lastName, String handle){
+    public void signUserUp(Uri uri,String firstName, String lastName, String handle, String password,
+                           String email){
 
-        mLoginLogic.signUpUser();
+        SignUpRequest request = new SignUpRequest(uri, firstName, lastName, handle, password, email);
+        mLoginLogic.signUpUser(request);
 
-        // TODO: REMOVE
-        profile.setLoggedIn(true);
         profile.setFirstName(firstName);
         profile.setLastName(lastName);
         profile.setHandle(new Handle(handle));
@@ -28,12 +31,23 @@ public class LoginPresenter {
         profile.setNumFollowing(0);
     }
 
-    // TODO returnn a response
-    public void connectUser(String hanlde, String password){
-        // TODO: remove
-        profile.setLoggedIn(true);
+    // TODO return a response
+    public void connectUser(String handle, String password){
 
-        // m
+        SignInRequest signInRequest = new SignInRequest(password, handle);
+        mLoginLogic.connectUser(signInRequest);
+        return;
     }
 
+    public void confirmCode(String code, String handle, String password) {
+        mLoginLogic.confirmCode(new ConfirmRequest(code, handle, password));
+    }
+
+    public void forgotPassword(String handle) {
+        mLoginLogic.forgotPassword(handle);
+    }
+
+    public void resetPassword(String newPassword, String confirmationCode) {
+        mLoginLogic.resetPassword(newPassword, confirmationCode);
+    }
 }

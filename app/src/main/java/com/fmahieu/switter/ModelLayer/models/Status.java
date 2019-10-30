@@ -13,17 +13,17 @@ public class Status {
     private String date;
     private List<Hashtag> hashtags;
     private String text;
-    private Uri picture;
+    private Image picture;
     private Uri video;
 
     public Status(Uri profilePicture, String userName, Handle handle, String date, String text,
-                  Uri pictures, Uri videos) {
+                  Image picture, Uri videos) {
         this.profilePicture = profilePicture;
         this.firstName = userName;
         this.handle = handle;
         this.date = date;
         this.text = text;
-        this.picture = pictures;
+        this.picture = picture;
         this.video = videos;
     }
 
@@ -47,7 +47,7 @@ public class Status {
         return text;
     }
 
-    public Uri getPicture() {
+    public Image getPicture() {
         return picture;
     }
 
@@ -71,8 +71,6 @@ public class Status {
                 ", handle='" + handle + '\'' +
                 ", date='" + date + '\'' +
                 ", text='" + text + '\'' +
-                ", picture=" + picture +
-                ", video=" + video +
                 '}';
     }
 }

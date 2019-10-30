@@ -7,10 +7,13 @@
 
     <!-- signin_fragment.xml -->
     <string name="signIn_buttonView_signInFragment">Sign in</string>
+    <string name="resetPassword_textView_signInFragment">Reset password</string>
 
-    <!-- signup_fragment.xmp -->
+    <!-- signup_fragment.xml -->
     <string name="showPasswordView_signUpFragment">Show password</string>
     <string name="signUp_buttonView_signUpFragment">Sign up</string>
+    <string name="emailHint_signUpFragment">Email</string>
+    <string name="passwordHint_signUpFragment">Password</string>
 
     <!-- signup_info_fragment.xml -->
     <string name="editPhotoView_signUpInfoActivity">Edit photo</string>
@@ -41,5 +44,12 @@
     <string name="checkBoxTextString_updateProfilePictureActivity">replace current profile picture</string>
     <string name="selectPictureString_updateProfilePictureActivity">Select picture</string>
     <string name="sendUpdatePicture_updateProfilePictureActivity">send</string>
+
+    <!-- ResetPasswordActivity -->
+    <string name="usernameHint_resetPasswordActivity">\@Handle</string>
+    <string name="resetButton_resetPasswordActivity">Reset password</string>
+    <string name="confirmationHint_resetPasswordActivity">Confirmation code</string>
+    <string name="sendConfirmationButton_resetPasswordActivity">Send code</string>
+    <string name="newPasswordHint_resetPasswordActivity">New password</string>
 
 </resources>

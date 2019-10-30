@@ -21,7 +21,8 @@
                 android:id="@+id/email_signUpFragment_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:contentDescription="email" />
+                android:contentDescription="email"
+                android:hint="@string/emailHint_signUpFragment"/>
 
         </LinearLayout>
 
@@ -35,7 +36,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:contentDescription="password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:hint="@string/passwordHint_signUpFragment"/>
 
         </LinearLayout>
 

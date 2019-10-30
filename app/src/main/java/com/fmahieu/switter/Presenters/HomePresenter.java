@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.fmahieu.switter.ModelLayer.ApplicationLogic.LoginLogic;
 import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateProfileLogic;
+import com.fmahieu.switter.ModelLayer.models.Image;
 import com.fmahieu.switter.ModelLayer.models.singleton.Feed;
 import com.fmahieu.switter.ModelLayer.models.singleton.Followers;
 import com.fmahieu.switter.ModelLayer.models.singleton.Following;
@@ -21,7 +22,7 @@ public class HomePresenter {
 
     }
 
-    public Uri getProfilePicture(){
+    public Image getProfilePicture(){
         return mProfile.getPicture();
     }
 

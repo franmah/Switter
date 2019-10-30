@@ -69,7 +69,7 @@ public class NewStatusActivity extends AppCompatActivity implements View.OnClick
         mEditImage = findViewById(R.id.imageEdit_textView_newStatusActivity);
         mSendButton = findViewById(R.id.sendButton_newStatusActivity);
 
-        mProfilePic.setImageURI(mProfile.getPicture());
+        mProfilePic.setImageBitmap(mProfile.getPicture().getBitmapImage());
         mHandle.setText(mProfile.getHandle().getHandleString());
 
         mEditVideo.setOnClickListener(this);

@@ -63,7 +63,7 @@ public class UpdateProfilePictureActivity extends AppCompatActivity implements V
         selectPictureTextView = findViewById( R.id.selectNewPicture_TextView_updateProfilePictureActivity );
         mSendButton = findViewById( R.id.sendButton_updateProfilePictureActivity );
 
-        profilePicture.setImageURI(mProfile.getPicture());
+        profilePicture.setImageBitmap(mProfile.getPicture().getBitmapImage());
 
         selectPictureTextView.setOnClickListener( this );
         updatePictureCheckBox.setOnClickListener( this );

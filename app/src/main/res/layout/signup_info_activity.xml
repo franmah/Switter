@@ -58,6 +58,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/continueButton_signUpInfoActivity" />
+
+            <EditText
+                android:id="@+id/codeConfirm_signUpInfoActivity"
+                android:layout_width="108dp"
+                android:layout_height="wrap_content" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="confirm"
+                android:id="@+id/codeConfirmButton_signUpInfoActivity"/>
+
         </LinearLayout>
 
     </ScrollView>

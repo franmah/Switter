@@ -54,6 +54,8 @@ public class StatusActivity extends AppCompatActivity {
         handle.setText( status.getHandle().getHandleString() );
         date.setText( status.getDate() );
         text.setText( status.getText() );
-        if ( status.getPicture() != null ) attachmentPicture.setImageURI( status.getPicture() );
+        if ( status.getPicture() != null ) {
+            attachmentPicture.setImageBitmap(status.getPicture().getBitmapImage());
+        }
     }
 }

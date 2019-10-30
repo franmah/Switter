@@ -104,6 +104,7 @@ public class StatusRecyclerFragment extends Fragment {
         ///////////////////////////////////////
         // TODO: REMOVE:
         // generate fake status
+        /*
 
         Status status = new Status(Profile.getUserInstance().getPicture(), "test", new Handle("@handle"),
                 "today", "test @someHandle #test #awesome @user another ", Profile.getUserInstance().getPicture(), null);
@@ -122,6 +123,7 @@ public class StatusRecyclerFragment extends Fragment {
         List<Status> tmp_test2 = new ArrayList<>();
         tmp_test2.add(status);
         hashtagFeed.setStatuses(tmp_test2);
+        */
         // end of remove
         /////////////////////////////////////////////////
 
@@ -179,12 +181,12 @@ public class StatusRecyclerFragment extends Fragment {
         public void bind(Status status) {
             this.status = status;
 
-            profilePic.setImageURI(status.getPicture());
+            profilePic.setImageBitmap(status.getPicture().getBitmapImage());
             profileName.setText(new String(status.getFirstName()+ status.getLastName()));
             handle.setText(status.getHandle().getHandleString());
             date.setText(status.getDate());
             //text.setText(status.getText());
-            if (status.getPicture() != null) attachmentPicture.setImageURI(status.getPicture());
+            if (status.getPicture() != null) attachmentPicture.setImageBitmap(status.getPicture().getBitmapImage());
             setSpanFromMessage(status.getText());
 
         }

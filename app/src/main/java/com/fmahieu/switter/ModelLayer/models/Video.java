@@ -1,9 +1,8 @@
 package com.fmahieu.switter.ModelLayer.models;
 
-public class Video extends Attachment {
+public class Video {
 
     public Video(String path){
-        super(path);
     }
 
 

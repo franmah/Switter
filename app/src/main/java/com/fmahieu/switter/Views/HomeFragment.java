@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fmahieu.switter.ModelLayer.models.Image;
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 import com.fmahieu.switter.Presenters.HomePresenter;
 import com.fmahieu.switter.R;
@@ -27,7 +28,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private HomePresenter mHomePresenter = new HomePresenter();
 
-    private Uri profilePicture;
+    private Image profilePicture;
 
     private ImageView mProfilePicture;
     private TextView mProfileTextView;
@@ -67,7 +68,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mSearch = view.findViewById(R.id.search_homeFragment);
         mNewTweet = view.findViewById(R.id.newTweet_homeFragment);
 
-        mProfilePicture.setImageURI(profilePicture);
+        mProfilePicture.setImageBitmap(profilePicture.getBitmapImage());
 
         mProfileTextView.setOnClickListener(this);
         mLogout.setOnClickListener(this);

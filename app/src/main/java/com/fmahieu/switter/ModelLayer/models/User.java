@@ -7,9 +7,9 @@ public class User {
     private String firstName;
     private String lastName;
     private Handle handle;
-    private Uri profilePicture;
+    private Image profilePicture;
 
-    public User(String firstName, String lastName, Handle handle, Uri profilePicture) {
+    public User(String firstName, String lastName, Handle handle, Image profilePicture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.handle = handle;
@@ -34,11 +34,11 @@ public class User {
         this.handle = handle;
     }
 
-    public Uri getProfilePicture() {
+    public Image getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture(Uri profilePicture) {
+    public void setProfilePicture(Image profilePicture) {
         this.profilePicture = profilePicture;
     }
 
