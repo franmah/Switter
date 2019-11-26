@@ -41,7 +41,7 @@ public class AppLogicFacade implements AppLogicFacadeInterface {
     }
 
     @Override
-    public void updaateUniqueUserInfo() {
+    public void updateUniqueUserInfo() {
 
     }
 
@@ -61,32 +61,12 @@ public class AppLogicFacade implements AppLogicFacadeInterface {
     }
 
     @Override
-    public void getStory() {
-
-    }
-
-    @Override
-    public void getStoryNextPage() {
-
-    }
-
-    @Override
     public void getHashtagFeed() {
 
     }
 
     @Override
     public void getHashtagFeedNextPage() {
-
-    }
-
-    @Override
-    public void getFollowing() {
-
-    }
-
-    @Override
-    public void getFollowingNextPage() {
 
     }
 

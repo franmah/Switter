@@ -1,15 +1,16 @@
 package com.fmahieu.switter.Presenters;
 
-import android.net.Uri;
-
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateProfileLogic;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.ProfileLogic;
+import com.fmahieu.switter.ModelLayer.models.EncodedProfilePicture;
+import com.fmahieu.switter.ModelLayer.models.MessageResult;
 
 public class UpdateProfilePicturePresenter {
+    private final String TAG = "__UpdateProfilePicturePresenter";
 
-    private UpdateProfileLogic mUpdateProfileLogic;
+    private ProfileLogic mUpdateProfileLogic;
 
     public UpdateProfilePicturePresenter(){
-        mUpdateProfileLogic = new UpdateProfileLogic();
+        mUpdateProfileLogic = new ProfileLogic();
     }
 
     public void getUpdatedProfile(){
@@ -17,17 +18,17 @@ public class UpdateProfilePicturePresenter {
     }
 
     /**
-     * update current profile picture and add picture to the user's list
+     * update current profile attachedPicture and add attachedPicture to the user's list
      */
-    public void updateCurrentProfilePicture(Uri picturePath){
-        mUpdateProfileLogic.setNewProfilePicture(true);
+    public MessageResult updateCurrentProfilePicture(EncodedProfilePicture image){
+        return mUpdateProfileLogic.setNewProfilePicture(image.getEncodedImage(), true);
     }
 
     /**
-     * add a picture to the current user's profile picture list (doesn't update profile picture)
+     * add a attachedPicture to the current user's profile attachedPicture list (doesn't update profile attachedPicture)
      */
-    public void addPictureToProfileList(Uri picturePath){
-        mUpdateProfileLogic.setNewProfilePicture(false);
+    public MessageResult addPictureToProfileList(EncodedProfilePicture image){
+        return mUpdateProfileLogic.setNewProfilePicture(image.getEncodedImage(), false);
 
     }
 

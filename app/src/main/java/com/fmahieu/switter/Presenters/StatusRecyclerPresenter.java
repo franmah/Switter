@@ -1,42 +1,26 @@
 package com.fmahieu.switter.Presenters;
 
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateFeedLogic;
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateHashtagLogic;
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateStoryLogic;
-import com.fmahieu.switter.ModelLayer.models.Status;
-import com.fmahieu.switter.ModelLayer.models.singleton.StatusFocus;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.StatusContentLogic;
+import com.fmahieu.switter.ModelLayer.models.StatusContentResult;
 
 public class StatusRecyclerPresenter {
 
-    private StatusFocus mStatusFocus;
-
-    private UpdateFeedLogic mUpdateFeedLogic;
-    private UpdateStoryLogic mUpdateStoryLogic;
-    private UpdateHashtagLogic mUpdateHashtagLogic;
+    private StatusContentLogic mUpdateStatusContentLogic;
 
     public StatusRecyclerPresenter(){
-        mStatusFocus = StatusFocus.getStatusFocusInstance();
-        mUpdateStoryLogic = new UpdateStoryLogic();
-        mUpdateFeedLogic = new UpdateFeedLogic();
-        mUpdateHashtagLogic = new UpdateHashtagLogic();
+        mUpdateStatusContentLogic = new StatusContentLogic();
     }
 
-    public void setStatusFocus(Status status){
-        mStatusFocus.setStatus(status);
+
+    public StatusContentResult getFeed(String handle, String lastKey){
+        return mUpdateStatusContentLogic.getFeed(handle, lastKey);
     }
 
-    public void getFeedNextPage(){
-        mUpdateFeedLogic.getFeedNextPage();
-
+    public StatusContentResult getStory(String handle, String lastKey){
+        return mUpdateStatusContentLogic.getStory(handle, lastKey);
     }
 
-    public void getStoryNextPage(){
-        mUpdateStoryLogic.getStoryNextPage();
-
-    }
-
-    public void getHashtagNextPage(){
-        mUpdateHashtagLogic.getHashtagFeedNextPage();
-
+    public StatusContentResult getHashtagFeed(String hashtag, String lastKey){
+        return mUpdateStatusContentLogic.getHashtagFeed(hashtag, lastKey);
     }
 }

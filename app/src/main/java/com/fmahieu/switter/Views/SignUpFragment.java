@@ -20,7 +20,6 @@ import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.Toast;
 
-import com.fmahieu.switter.ModelLayer.models.Handle;
 import com.fmahieu.switter.ModelLayer.models.Status;
 import com.fmahieu.switter.R;
 
@@ -38,21 +37,14 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.i(TAG, "onCreate()");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView()");
 
         View view = inflater.inflate(R.layout.signup_fragment, container, false);
-
         setUpViews(view);
-
-
-
         return view;
     }
 
@@ -71,14 +63,39 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
 
     @Override
     public void onClick(View v) {
-        // move to signUpInfoActivity and pass the email and password
-        Intent intent = SignUpInfoActivity.newIntent(getActivity(),
-                                                    mEmailEditText.getText().toString(),
-                                                    mPasswordEditText.getText().toString());
-        startActivityForResult(intent, SIGNUP_RESPONSE_CODE);
-
+        if(checkInput()) {
+            // move to signUpInfoActivity and pass the email and password
+            Intent intent = SignUpInfoActivity.newIntent(getActivity(),
+                    mEmailEditText.getText().toString(),
+                    mPasswordEditText.getText().toString());
+            startActivityForResult(intent, SIGNUP_RESPONSE_CODE);
+        }
     }
 
+    private boolean checkInput(){
+        String email = mEmailEditText.getText().toString();
+        String password = mPasswordEditText.getText().toString();
+        boolean result = false;
+
+        // <= 4 because should contain at least "@." and two more characters
+        if(email.length() <= 4 && !email.contains("@")){
+            makeToast("enter a valid email");
+        }
+        else if(password.length() < 2){
+            makeToast("password should be at least 2 characters for more security");
+        }
+        else{
+            result = true;
+        }
+
+        return result;
+    }
+
+    /**
+     * Switch between hidden shown view of the password when the user change the switch widget
+     * @param buttonView
+     * @param isChecked
+     */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if(isChecked){
@@ -97,21 +114,22 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.i(TAG, "received a result from SignUpInfoActivity");
-        if (resultCode != Activity.RESULT_OK) {
-            // TODO: show meaningfull error
-            makeToast("Error");
-        }
 
-        if (requestCode == SIGNUP_RESPONSE_CODE) {
+        if (resultCode != Activity.RESULT_OK) {
+            Log.i(TAG, "onActivityResult: received an activity result with a coded != OK");
+            makeToast("Something went wrong");
+        }
+        else if (requestCode == SIGNUP_RESPONSE_CODE) {
             if (data == null) {
-                // TODO show meaningful error
-                makeToast("Error");
+                Log.i(TAG, "onActivityResult: data from result came back null");
+                makeToast("Something went wrong");
             }
 
             boolean isUserSignedUp = SignUpInfoActivity.wasUserSignedUp(data);
+
             if(isUserSignedUp){
                 Log.i(TAG, "user has successfully signed in");
-                // the user has successfully logged in
+
                 // tell LoginFragment to let MainActivity know the user has logged in
                 Fragment loginFragment = getParentFragment();
                 if(loginFragment instanceof LoginFragment){
@@ -119,17 +137,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener, Co
                 }
             }
             else{
-                //TODO show meaningful error message;
-                makeToast("error");
+                makeToast("Unable to sign up");
             }
         }
     }
-
-    private void logUserIn(boolean isUserSignedUp){
-        if(isUserSignedUp){
-            // TODO: find a way to call change fragment inside LoginFragment
-        }
-    }
-
 
 }

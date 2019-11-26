@@ -1,32 +1,21 @@
 package com.fmahieu.switter.Views;
 
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.fmahieu.switter.ModelLayer.models.singleton.Feed;
-import com.fmahieu.switter.ModelLayer.models.Handle;
-import com.fmahieu.switter.ModelLayer.models.singleton.HashtagFeed;
-import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
+import com.fmahieu.switter.ModelLayer.models.StatusContentResult;
 import com.fmahieu.switter.ModelLayer.models.Status;
 import com.fmahieu.switter.ModelLayer.models.singleton.StatusFocus;
-import com.fmahieu.switter.ModelLayer.models.singleton.Story;
-import com.fmahieu.switter.Presenters.FeedPresenter;
 import com.fmahieu.switter.Presenters.StatusRecyclerPresenter;
 import com.fmahieu.switter.R;
 
@@ -42,38 +31,29 @@ import java.util.List;
 
 public class StatusRecyclerFragment extends Fragment {
     private final String TAG = "__StatusRecyclerFragment";
-    private static final String SHOW_FEED =
-            "com.fmahieu.switter.views.StatusRecyclerFragment.showFeed";
-    private static final String SHOW_HASHTAG_FEED =
-            "com.fmahieu.switter.views.StatusRecyclerFragment.showHashtagFeed";
+    private static final String TYPE_TO_DISPLAY =
+            "com.fmahieu.switter.views.StatusRecyclerFragment.typeToDisplay";
+    private static final String CONTENT_OWNER =
+            "com.fmahieu.switter.views.StatusRecyclerFragment.contentOwner";
 
-    private FeedPresenter feedPresenter = new FeedPresenter();
-    private Feed feed;
-    private Story story;
-    private HashtagFeed hashtagFeed;
+
     private StatusFocus statusFocus;
 
-    private boolean displayFeed;
-    private boolean displayHashtagFeed;
+    //private String lastkey = "begin"; // "begin" is the keyword to let the database know that it should return the first page
+    private String lastkey = "";
+    private String contentOwner;
+
+    private static final int FEED_TYPE = 0;
+    private static final int STORY_TYPE = 1;
+    private static final int HASHTAG_TYPE = 2;
+    private int displayType = 0;
 
     private StatusRecyclerPresenter mStatusRecyclerPresenter;
 
-    private RecyclerView mFeedRecycler;
-    private StatusRecyclerAdapter mStatusRecyclerAdapter;
+    private RecyclerView mRecycler;
+    private StatusRecyclerAdapter mStatusAdapter;
 
-    public static Bundle createDisplayFeedBundle(boolean shouldShowFeed){
-        Bundle bundle = new Bundle();
-        bundle.putBoolean( SHOW_FEED, shouldShowFeed );
-        bundle.putBoolean( SHOW_HASHTAG_FEED, false );
-        return bundle;
-    }
-
-    public static Bundle createDisplayHashtagFeedBundle(boolean shouldShowHashtagFeed){
-        Bundle bundle = new Bundle();
-        bundle.putBoolean( SHOW_HASHTAG_FEED, shouldShowHashtagFeed );
-        bundle.putBoolean( SHOW_FEED, false ); // don't show the feed.
-        return bundle;
-    }
+    //private List<Status> statues;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -86,245 +66,202 @@ public class StatusRecyclerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         Log.i(TAG, "onCreateView()");
-
         View view = inflater.inflate(R.layout.status_recycler_fragment, container, false);
 
-        displayFeed = this.getArguments().getBoolean( SHOW_FEED );
-        displayHashtagFeed = this.getArguments().getBoolean( SHOW_HASHTAG_FEED );
+        displayType = this.getArguments().getInt( TYPE_TO_DISPLAY );
+        contentOwner = this.getArguments().getString(CONTENT_OWNER);
 
         mStatusRecyclerPresenter = new StatusRecyclerPresenter();
-
-        // Each singleton should have been updated by the activity/fragment calling this recycler
-        feed = Feed.getFeedInstance();
-        story = Story.getStoryInstance();
-        hashtagFeed = HashtagFeed.getInstance();
-        statusFocus = StatusFocus.getStatusFocusInstance();
-
-
-        ///////////////////////////////////////
-        // TODO: REMOVE:
-        // generate fake status
-        /*
-
-        Status status = new Status(Profile.getUserInstance().getPicture(), "test", new Handle("@handle"),
-                "today", "test @someHandle #test #awesome @user another ", Profile.getUserInstance().getPicture(), null);
-        List<Status> tmp_test = new ArrayList<>();
-        tmp_test.add(status);
-        feed.setStatuses(tmp_test);
-
-        status = new Status(Profile.getUserInstance().getPicture(), "STORY", new Handle("@STORY"),
-                "today", "STORY", Profile.getUserInstance().getPicture(), null);
-        List<Status> tmp_test1 = new ArrayList<>();
-        tmp_test1.add(status);
-        story.setStatuses(tmp_test1);
-
-        status = new Status(Profile.getUserInstance().getPicture(), "HASHTAG", new Handle("@hashtag"),
-                "today", "HASHTAG!!!!!!!", Profile.getUserInstance().getPicture(), null);
-        List<Status> tmp_test2 = new ArrayList<>();
-        tmp_test2.add(status);
-        hashtagFeed.setStatuses(tmp_test2);
-        */
-        // end of remove
-        /////////////////////////////////////////////////
-
+        //statusFocus = StatusFocus.getStatusFocusInstance();
         setUpWidgets(view);
 
         return view;
     }
 
     private void setUpWidgets(View v) {
-        mFeedRecycler = v.findViewById(R.id.recycler_feedFragment);
-        mFeedRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mStatusRecyclerAdapter = new StatusRecyclerAdapter();
-        mFeedRecycler.setAdapter(mStatusRecyclerAdapter);
+        mRecycler = v.findViewById(R.id.recycler_StatusRecyclerFragment);
+        mRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mStatusAdapter = new StatusRecyclerAdapter();
+        mRecycler.setAdapter(mStatusAdapter);
+    }
+
+    // start a request to the server for more content
+    private void startLoadingContentRequest(){
+        Log.i(TAG, "Starting AsyncTask");
+        makeToast("Loading more content");
+        new ContentRequester().execute();
+    }
+
+    /**
+     * Called once the async task has returned with a result.
+     * @param result
+     */
+    private void loadContentRequest(StatusContentResult result){
+
+        if(result.getError() != null){
+            makeToast(result.getError());
+        }
+        else if(result.getStatuses() == null){
+            makeToast("no more content to show");
+        }
+        else if(result.getStatuses().size() == 0){
+            makeToast("no more content to show");
+            lastkey = result.getLastKey();
+        }
+        else{
+            mStatusAdapter.loadMoreContent(result.getStatuses());
+            lastkey = result.getLastKey();
+        }
     }
 
 
-    private class StatusRecyclerHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private Status status;
+    private class StatusRecyclerAdapter extends RecyclerView.Adapter<StatusHolder> {
+        private List<Status> statues = new ArrayList<>();
+        private boolean isLoadingAllowed;
 
-        private LinearLayout mLinearLayout;
+        // the recycler will start getting more content when reaching the size - LOAD_OFFSET's status
+        private final int LOAD_OFFSET = 1;
 
-        private ImageView profilePic;
-        private TextView profileName;
-        private TextView handle;
-        private TextView date;
-        private TextView text;
-        private ImageView attachmentPicture;
-
-        public StatusRecyclerHolder(LayoutInflater inflater, ViewGroup parent) {
-            super(inflater.inflate(R.layout.status_holder, parent, false));
-            Log.i(TAG, "Creating holder");
-
-            // set up widgets
-
-            profilePic = itemView.findViewById(R.id.profilePicture_imageView_statusHolder);
-            profileName = itemView.findViewById(R.id.profileName_textView_statusHolder);
-            handle = itemView.findViewById(R.id.handle_TextView_statusHolder);
-            date = itemView.findViewById(R.id.date_textView_statusHolder);
-            text = itemView.findViewById(R.id.text_TextView_statusHolder);
-            attachmentPicture = itemView.findViewById(R.id.pictureAttachment_statusHolder);
-
-            // TODO: test:
-            text.setOnClickListener(this);
-            profileName.setOnClickListener(this);
-            handle.setOnClickListener(this);
-            profilePic.setOnClickListener(this);
-
-
-            mLinearLayout = itemView.findViewById(R.id.linearLayout_statusHolder);
-            mLinearLayout.setOnClickListener(this);
-
-        }
-
-        public void bind(Status status) {
-            this.status = status;
-
-            profilePic.setImageBitmap(status.getPicture().getBitmapImage());
-            profileName.setText(new String(status.getFirstName()+ status.getLastName()));
-            handle.setText(status.getHandle().getHandleString());
-            date.setText(status.getDate());
-            //text.setText(status.getText());
-            if (status.getPicture() != null) attachmentPicture.setImageBitmap(status.getPicture().getBitmapImage());
-            setSpanFromMessage(status.getText());
-
-        }
-
-        // find hashtags and handles and set them clickable
-        private void setSpanFromMessage(final String message){
-            List<Integer> handles = new ArrayList<>();
-            List<Integer> hashtags = new ArrayList<>();
-
-            // parse string to find handles and hashtags
-            for(int i = 0; i < message.length(); i++){
-
-                if(message.charAt(i) == '@'){
-                    handles.add(i); // first index of the handle
-                    while(message.charAt(i) != ' ') {
-                        i++;
-                        if( i == message.length() ){ break; }
-                    }
-                    handles.add(i); // end index of the handle
-
-                }
-                else if( message.charAt(i) == '#'){
-
-                    hashtags.add(i);
-                    while ( message.charAt(i) != ' ' ){
-                        i++;
-                        if( i == message.length() ){ break; }
-                    }
-                    hashtags.add(i) ;
-                }
-
-            }
-
-            SpannableString spannableString = new SpannableString(message);
-
-            // set span fo handles
-            for( int i = 0; i < handles.size() - 1; i += 2 ){
-
-                final int first = handles.get(i);
-                final int last = handles.get(i + 1);
-
-                spannableString.setSpan(new ClickableSpan() {
-                    @Override
-                    public void onClick(View widget) {
-
-                        String tmpHandle = message.substring(first, last);
-                        // go to UserActivity
-                        Intent intent = UserActivity.newIntent(getContext(), tmpHandle);
-                        startActivity(intent);
-
-                    }
-                }, first, last, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
-
-            // set span for hashtags
-            for( int i = 0; i < hashtags.size() - 1; i += 2 ){
-                final int first = hashtags.get( i );
-                final int last = hashtags.get( i + 1  );
-                spannableString.setSpan(new ClickableSpan() {
-                    @Override
-                    public void onClick(View widget) {
-
-                        String tmpHashtag = message.substring( first, last );
-                        Intent intent = HashtagActivity.newIntent( getContext(), tmpHashtag );
-                        startActivity(intent);
-
-                    }
-                }, first, last, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-            }
-
-            text.setMovementMethod(LinkMovementMethod.getInstance());
-            text.setText(spannableString);
-        }
-
-
-        @Override
-        public void onClick(View v) {
-            int id = v.getId();
-
-            if( id == R.id.profilePicture_imageView_statusHolder ||
-                id == R.id.profileName_textView_statusHolder ||
-                id == R.id.handle_TextView_statusHolder ) {
-
-                // go to UserActivity if profile pic, name or handle is touched
-                Intent intent = UserActivity.newIntent(getActivity(), status.getHandle().getHandleString());
-                startActivity(intent);
-            }
-            else{
-                // TODO: modify to set everything else clickable
-                // start StatusActivity
-                 mStatusRecyclerPresenter.setStatusFocus(status); //statusFocus instance used by StatusActivity to know which status to show
-                Intent intent = new Intent(getActivity(), StatusActivity.class);
-                startActivity(intent);
-            }
-        }
-    }
-
-    private class StatusRecyclerAdapter extends RecyclerView.Adapter<StatusRecyclerHolder> {
-        private List<Status> statues;
 
         public StatusRecyclerAdapter() {
             Log.i(TAG, "StatusRecyclerAdapter()");
 
-            if( displayFeed ) {
-                statues = feed.getStatuses();
-            }
-            else if ( displayHashtagFeed ){
-                statues = hashtagFeed.getStatuses();
-            }
-            else{
-                statues = story.getStatuses();
-            }
+            // force load the first page
+            startLoadingContentRequest();
+            isLoadingAllowed = false;
+
+            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)
+            mRecycler.getLayoutManager();
+
+            // Listener to know when to load more content
+            mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+
+                        int numStatuses = linearLayoutManager.getItemCount();
+                        int lastVisibleStatus = linearLayoutManager.findLastVisibleItemPosition();
+
+                        // if lastKey is null there is no more content to show, don't allow useless
+                        // communication with the server
+                        if (numStatuses - LOAD_OFFSET <= (lastVisibleStatus) && lastkey != null) {
+                            if(isLoadingAllowed) {
+                                isLoadingAllowed = false; // prevent multiple loading
+                                startLoadingContentRequest();
+                            }
+                        }
+                }
+            });
         }
 
         @NonNull
         @Override
-        public StatusRecyclerHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public StatusHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new StatusRecyclerHolder(layoutInflater, viewGroup);
+            return new StatusHolder(layoutInflater, viewGroup, getContext());
         }
 
         @Override
-        public void onBindViewHolder(@NonNull StatusRecyclerHolder statusRecyclerHolder, int i) {
+        public void onBindViewHolder(@NonNull StatusHolder statusRecyclerHolder, int i) {
             statusRecyclerHolder.bind(statues.get(i));
         }
 
         @Override
         public int getItemCount() {
-            Log.i(TAG, "Number of statuses");
-            if(statues == null){
-                return 0;
+            return statues.size();
+        }
+
+
+        public void loadMoreContent(final List<Status> newItems){
+
+            if(newItems != null && newItems.size() != 0){
+                statues.addAll(newItems);
+                mStatusAdapter.notifyDataSetChanged();
+                isLoadingAllowed = true;
             }
             else{
-                return statues.size();
+                makeToast("something went wrong (sorry)");
             }
+
         }
     }
+
+    /**
+     * BUNDLES TO PASS DATA BETWEEN ACTIVITIES
+     */
+
+    public static Bundle createDisplayFeedBundle(String handle){
+        Bundle bundle = new Bundle();
+        bundle.putString(CONTENT_OWNER, handle);
+        bundle.putInt( TYPE_TO_DISPLAY, FEED_TYPE );
+        return bundle;
+    }
+
+    public static Bundle createDisplayStoryBundle(String handle){
+        Bundle bundle = new Bundle();
+        bundle.putInt( TYPE_TO_DISPLAY, STORY_TYPE );
+        bundle.putString( CONTENT_OWNER, handle );
+        return bundle;
+    }
+
+    public static Bundle createDisplayHashtagFeedBundle(String hashtagToPass){
+        Bundle bundle = new Bundle();
+        bundle.putInt( TYPE_TO_DISPLAY, HASHTAG_TYPE );
+        bundle.putString( CONTENT_OWNER, hashtagToPass );
+        return bundle;
+    }
+
+    private void makeToast(String message){
+        if(message == null){
+            Log.e(TAG, "trying to make toast with a null message");
+        }
+        Log.i(TAG, "making toast: " + message);
+        if(getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    private class ContentRequester extends AsyncTask<Void, Void, StatusContentResult> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected StatusContentResult doInBackground(Void... params){
+            Log.i(TAG, "fetchingMoreContent, starting request: owner: " + contentOwner
+                                + ", lastKey: " + (lastkey + 1));
+
+            StatusContentResult response = null;
+
+            switch (displayType){
+                case FEED_TYPE:
+                    response = mStatusRecyclerPresenter.getFeed(contentOwner, lastkey);
+                    break;
+                case STORY_TYPE:
+                    response = mStatusRecyclerPresenter.getStory(contentOwner, lastkey);
+                    break;
+                case HASHTAG_TYPE:
+                    // the content owner is the hashtag to display
+                    response = mStatusRecyclerPresenter.getHashtagFeed(contentOwner, lastkey);
+                    break;
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(StatusContentResult response){
+            // Tell the RecyclerFragment that the content can be loaded.
+            loadContentRequest(response);
+        }
+    }
+
+
+
+
 
 }
 

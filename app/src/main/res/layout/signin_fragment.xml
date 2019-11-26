@@ -17,7 +17,7 @@
 
             <EditText
                 android:id="@+id/handle_signInFragment_editText"
-                android:text="\@franchare"
+                android:text="\@myHandle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="\@Handle"
@@ -34,7 +34,7 @@
                 android:id="@+id/password_signInFragment_editText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="cs340switter"
+                android:text="fr"
                 android:hint="Password"/>
 
         </LinearLayout>

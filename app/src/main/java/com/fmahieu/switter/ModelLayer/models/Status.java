@@ -1,33 +1,32 @@
 package com.fmahieu.switter.ModelLayer.models;
 
-import android.net.Uri;
-
-import java.util.List;
-
 public class Status {
 
-    private Uri profilePicture;
-    private String firstName;
-    private String lastName;
-    private Handle handle;
-    private String date;
-    private List<Hashtag> hashtags;
-    private String text;
-    private Image picture;
-    private Uri video;
+    public LinkProfilePicture profilePicture;
+    public String firstName;
+    public String lastName;
+    public String handle;
+    public String timestamp;
+    public String text;
+    public LinkAttachmentImage attachedPicture;
+    public boolean isImage;
 
-    public Status(Uri profilePicture, String userName, Handle handle, String date, String text,
-                  Image picture, Uri videos) {
+    public Status(LinkProfilePicture profilePicture, String firstName, String lastName, String handle,
+                  String date, String text, LinkAttachmentImage picture) {
         this.profilePicture = profilePicture;
-        this.firstName = userName;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.handle = handle;
-        this.date = date;
+        this.timestamp = date;
         this.text = text;
-        this.picture = picture;
-        this.video = videos;
+        this.attachedPicture = picture;
     }
 
-    public Uri getProfilePicture() {
+    public void setIsImage(boolean cond){
+        isImage = cond;
+    }
+
+    public LinkProfilePicture getProfilePicture() {
         return profilePicture;
     }
 
@@ -35,25 +34,22 @@ public class Status {
         return firstName;
     }
 
-    public Handle getHandle() {
+    public String getHandle() {
         return handle;
     }
 
-    public String getDate() {
-        return date;
+    public String getTimestamp() {
+        return timestamp;
     }
 
     public String getText() {
         return text;
     }
 
-    public Image getPicture() {
-        return picture;
+    public LinkAttachmentImage getAttachmentPicture() {
+        return attachedPicture;
     }
 
-    public Uri getVideo() {
-        return video;
-    }
 
     public String getLastName() {
         return lastName;
@@ -69,7 +65,7 @@ public class Status {
                 "profilePicture=" + profilePicture +
                 ", firstName='" + firstName + '\'' +
                 ", handle='" + handle + '\'' +
-                ", date='" + date + '\'' +
+                ", timestamp='" + timestamp + '\'' +
                 ", text='" + text + '\'' +
                 '}';
     }

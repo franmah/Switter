@@ -15,6 +15,42 @@ import com.fmahieu.switter.R;
 
 import static com.amazonaws.mobile.client.UserState.SIGNED_IN;
 
+// TODO: PROJECT
+// - isFollowing ?
+// - newStatus
+//
+
+// TODO: GENERAL:
+// !!!!!!!!! http get and post: regroup it
+// replace menu in home fragment by pictures/icons
+// create a static class Toaster to make toast
+
+// TODO: DATABASE:
+// regroup the code to parse a status result in feed, story, hashtag
+// (the part where putting together the statuscontentresult is the same
+
+// TODO: IMPORTANT
+// - sign in should return a user (and fill the profile instance)
+// - sign up should fill the profile instance
+// - Create an Image super class, and have link image and encoded image extend it
+// - anytime a profile attachedPicture is displayed the image holding it should be a link and an async task should downlaod it
+//          (in userActivity, statusRecycler, followRecycler)
+
+// TODO: UserActivity
+// When clicking on a mention the user is downloaded in StatusHolder and StatusActivity (the code is copied)
+// find a better way to do it (than to have the same code in two places)
+
+// TODO: Profile
+// remove the profile attachedPicture list
+
+// TODO: DataParser
+// have only one function that goes json -> object, object -> json and pass it a class ?
+
+// TODO: StatusFocus
+// SF is used in StatusHolder.java, get rid of it (pass a status as json)
+
+// TODO: move the models for http to http model package.
+
 public class MainActivity extends AppCompatActivity{
     private final String TAG = "__MainActivity";
 
@@ -27,11 +63,6 @@ public class MainActivity extends AppCompatActivity{
         Log.i(TAG, "MainActivity started");
 
         setContentView(R.layout.main_activity);
-
-        //initializeAWS();
-        mMainActivityPresenter.initializeAuth(this);
-
-        //createAwsListener();
         getFragment();
     }
 
@@ -42,7 +73,6 @@ public class MainActivity extends AppCompatActivity{
 
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer_mainActivity_FrameLayout);
 
-        Log.i(TAG, "FLAG2");
         if(fragment == null){
             if(isUserLoggedIn){
                 fragment = new HomeFragment();

@@ -1,20 +1,21 @@
 package com.fmahieu.switter.ModelLayer.models;
 
-import android.net.Uri;
 
 public class User {
 
-    private String firstName;
-    private String lastName;
-    private Handle handle;
-    private Image profilePicture;
+    public String firstName;
+    public String lastName;
+    public String handle;
+    public LinkProfilePicture profilePicture;
 
-    public User(String firstName, String lastName, Handle handle, Image profilePicture) {
+    public User(String firstName, String lastName, String handle, LinkProfilePicture profilePicture) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.handle = handle;
         this.profilePicture = profilePicture;
     }
+
+    public User(){}
 
     /** GETTERS AND SETTERS **/
 
@@ -26,19 +27,19 @@ public class User {
         this.firstName = firstName;
     }
 
-    public Handle getHandle() {
+    public String getHandle() {
         return handle;
     }
 
-    public void setHandle(Handle handle) {
+    public void setHandle(String handle) {
         this.handle = handle;
     }
 
-    public Image getProfilePicture() {
+    public LinkProfilePicture getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture(Image profilePicture) {
+    public void setProfilePicture(LinkProfilePicture profilePicture) {
         this.profilePicture = profilePicture;
     }
 
@@ -49,4 +50,5 @@ public class User {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
 }

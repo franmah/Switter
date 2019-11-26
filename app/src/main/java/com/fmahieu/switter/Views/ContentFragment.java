@@ -11,8 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.fmahieu.switter.Presenters.ContentPresenter;
 import com.fmahieu.switter.R;
 
 
@@ -26,9 +26,11 @@ import com.fmahieu.switter.R;
  */
 
 public class ContentFragment extends Fragment implements View.OnClickListener {
+    private static final String HANDLE_TO_DISPLAY =
+            "com.fmahieu.switter.views.contentFragment.handleToDisplay";
     private final String TAG = "__ContentFragment";
 
-    private ContentPresenter mContentPresenter = new ContentPresenter();
+    private String handleToDisplay; // handle passed to the recyclers to know who's feed to show.
 
     private TextView mFeed;
     private TextView mStory;
@@ -53,23 +55,14 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.content_fragment, container, false);
 
+        // get Argument
+        handleToDisplay = this.getArguments().getString(HANDLE_TO_DISPLAY);
+        Log.i(TAG, "Showing content for " + handleToDisplay);
+
         setUpWidgets(view);
-
-        // TODO: in another thread:
-        // Update each singleton: will request first page to display
-        updateContent();
-
         getFragment();
 
         return view;
-    }
-
-    private void updateContent(){
-        // Using each singletons' owner, ContentPresenter will fetch the data for the right user.
-        mContentPresenter.updateFeed();
-        mContentPresenter.updateStory();
-        mContentPresenter.updateFollowing();
-        mContentPresenter.updateFollowers();
     }
 
 
@@ -88,24 +81,21 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+        setAllShowTabFalse();
         switch(v.getId()){
             case R.id.feed_contentFragment_TextView:
-                setAllShowTabFalse();
                 showFeed = true;
                 getFragment();
                 break;
             case R.id.story_contentFragment_TextView:
-                setAllShowTabFalse();
                 showStory = true;
                 getFragment();
                 break;
             case  R.id.following_contentFragment_TextView:
-                setAllShowTabFalse();
                 showFollowing = true;
                 getFragment();
                 break;
             case R.id.followers_contentFragment_TextView:
-                setAllShowTabFalse();
                 showFollowers = true;
                 getFragment();
                 break;
@@ -128,7 +118,7 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
         if(fragment == null){
             // show the feed by default
-            Bundle bundle = StatusRecyclerFragment.createDisplayFeedBundle(true);
+            Bundle bundle = StatusRecyclerFragment.createDisplayFeedBundle(handleToDisplay);
             fragment = new StatusRecyclerFragment();
             fragment.setArguments(bundle);
 
@@ -139,22 +129,22 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
 
             if(showFeed){
                 // tell StatusRecyclerFragment to use feed instance
-                bundle = StatusRecyclerFragment.createDisplayFeedBundle(true);
+                bundle = StatusRecyclerFragment.createDisplayFeedBundle(handleToDisplay);
                 fragment = new StatusRecyclerFragment();
                 fragment.setArguments(bundle);
 
             }
             else if(showStory){
-                bundle = StatusRecyclerFragment.createDisplayFeedBundle(false);
+                bundle = StatusRecyclerFragment.createDisplayStoryBundle(handleToDisplay);
                 fragment = new StatusRecyclerFragment();
             }
             else if(showFollowing){
-                // let the recycler know it has to show following users
-                bundle = FollowRecyclerFragment.createBundle(true);
+                // let the recycler know it has to show following followUsers
+                bundle = FollowRecyclerFragment.createBundle(true, handleToDisplay);
                 fragment = new FollowRecyclerFragment();
             }
             else if(showFollowers){
-                bundle = FollowRecyclerFragment.createBundle(false);
+                bundle = FollowRecyclerFragment.createBundle(false, handleToDisplay);
                 fragment = new FollowRecyclerFragment();
 
             }
@@ -164,5 +154,17 @@ public class ContentFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
+
+    public static Bundle createContentFragmentBundle(String handle){
+        Bundle bundle = new Bundle();
+        bundle.putString( HANDLE_TO_DISPLAY, handle );
+        return bundle;
+    }
+
+    private void makeToast(String message){
+        Log.i(TAG, "making toast: " + message);
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
 
 }

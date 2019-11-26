@@ -28,13 +28,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate()");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.i(TAG, "onCreateView()");
 
         View view = inflater.inflate(R.layout.login_fragment, container, false);
 
@@ -47,9 +45,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
     private void setUpViews(View view){
         Log.i(TAG, "Setting up views");
 
-        mLogoImageView = (ImageView) view.findViewById(R.id.logo_loginFragment_ImageView);
-        mSignInTextView = (TextView) view.findViewById(R.id.signIn_loginFragment_textView);
-        mSignUpTextView = (TextView) view.findViewById(R.id.signUp_loginFragment_textView);
+        mLogoImageView = view.findViewById(R.id.logo_loginFragment_ImageView);
+        mSignInTextView = view.findViewById(R.id.signIn_loginFragment_textView);
+        mSignUpTextView = view.findViewById(R.id.signUp_loginFragment_textView);
 
         // set logo image
         // TODO: replace image by actual logo

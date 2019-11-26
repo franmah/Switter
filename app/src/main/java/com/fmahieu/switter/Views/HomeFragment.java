@@ -2,7 +2,7 @@ package com.fmahieu.switter.Views;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,8 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.fmahieu.switter.ModelLayer.models.Image;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.PictureLoader;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.PictureLoaderTask;
+import com.fmahieu.switter.ModelLayer.models.MessageResult;
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 import com.fmahieu.switter.Presenters.HomePresenter;
 import com.fmahieu.switter.R;
@@ -27,8 +30,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private final String TAG = "__HomeFragment";
 
     private HomePresenter mHomePresenter = new HomePresenter();
-
-    private Image profilePicture;
 
     private ImageView mProfilePicture;
     private TextView mProfileTextView;
@@ -49,13 +50,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         View view = inflater.inflate(R.layout.home_fragment, container, false);
 
-
-        // Update and get needed user profile
-        mHomePresenter.updateProfile();
-        profilePicture = mHomePresenter.getProfilePicture();
-
         setUpViews(view);
-        setUpModelInstances();
         getFragment();
 
         return view;
@@ -68,7 +63,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mSearch = view.findViewById(R.id.search_homeFragment);
         mNewTweet = view.findViewById(R.id.newTweet_homeFragment);
 
-        mProfilePicture.setImageBitmap(profilePicture.getBitmapImage());
+        Log.i(TAG, "loading attachedPicture, profile link: " + Profile.getUserInstance().getProfilePictureLink().getLink());
+        //PictureLoader.loadPictureLink(
+        //        getContext(), Profile.getUserInstance().getProfilePictureLink().getLink(), mProfilePicture);
+        new PictureLoaderTask(mProfilePicture, Profile.getUserInstance().getProfilePictureLink().getLink()).execute();
 
         mProfileTextView.setOnClickListener(this);
         mLogout.setOnClickListener(this);
@@ -78,31 +76,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    /**
-     * Setup singletons owners
-     */
-    private void setUpModelInstances(){
-        // set the owner (as profile) for each singleton.
-        // the ContentFragment then can know which data to retrieve.
-        mHomePresenter.setUpFeedOwner();
-        mHomePresenter.setUpStoryOwner();
-        mHomePresenter.setUpFollowingOwner();
-        mHomePresenter.setUpFollowersOwner();
-    }
-
-
     @Override
     public void onClick(View v) {
         Intent intent;
 
         switch(v.getId()){
             case R.id.logout_homeFragment:
-                mHomePresenter.logOutUser();
-                updateSuperFragment(); // will tell MainActivity to switch to login fragment
+                new LogOutUserTask().execute();
                 break;
             case R.id.search_homeFragment:
-                intent = new Intent(getActivity(), SearchActivity.class);
-                startActivity(intent);
+                //intent = new Intent(getActivity(), SearchActivity.class);
+                //startActivity(intent);
                 break;
             case R.id.newTweet_homeFragment:
                 intent = new Intent(getActivity(), NewStatusActivity.class);
@@ -113,7 +97,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 startActivity(intent);
                 break;
             case R.id.profile_textView_homeFragment:
-                intent = UserActivity.newIntent(getContext(), Profile.getUserInstance().getHandle().getHandleString());
+                intent = UserActivity.newHandleIntent(getContext(), Profile.getUserInstance().getHandle());
                 startActivity(intent);
         }
     }
@@ -128,19 +112,47 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-
     private void getFragment(){
-
         // get contentFragment
         FragmentManager fragmentManager = getChildFragmentManager();
         Fragment fragment = fragmentManager.findFragmentById(R.id.fragmentContainer_homeFragment_FrameLayout);
 
         if(fragment == null){
             fragment = new ContentFragment();
+            Bundle bundle = ContentFragment.createContentFragmentBundle(Profile.getUserInstance().getHandle());
+            fragment.setArguments(bundle);
             fragmentManager.beginTransaction().add(R.id.fragmentContainer_homeFragment_FrameLayout, fragment).commit();
         }
         else{
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer_homeFragment_FrameLayout, fragment).commit();
+        }
+    }
+
+    private void makeToast(String message){
+        Log.i(TAG, "making toast: " + message);
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void onLogOutUserResult(MessageResult result)   {
+        if(result.getError() == null){
+            updateSuperFragment();
+        }
+        else{
+            makeToast(result.getError());
+        }
+    }
+
+    private class LogOutUserTask extends AsyncTask<Void, Void, MessageResult> {
+
+        @Override
+        protected MessageResult doInBackground(Void... params){
+            Log.i(TAG, "logging user out");
+            return mHomePresenter.logOutUser();
+        }
+
+        @Override
+        protected void onPostExecute(MessageResult result){
+            onLogOutUserResult(result);
         }
     }
 }

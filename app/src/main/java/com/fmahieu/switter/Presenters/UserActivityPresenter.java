@@ -1,59 +1,44 @@
 package com.fmahieu.switter.Presenters;
 
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateProfileLogic;
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateUniqueUserLogic;
-import com.fmahieu.switter.ModelLayer.models.singleton.Feed;
-import com.fmahieu.switter.ModelLayer.models.singleton.Followers;
-import com.fmahieu.switter.ModelLayer.models.singleton.Following;
-import com.fmahieu.switter.ModelLayer.models.Handle;
-import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
-import com.fmahieu.switter.ModelLayer.models.singleton.Story;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.ProfileLogic;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.UserLogic;
+import com.fmahieu.switter.ModelLayer.models.MessageResult;
+import com.fmahieu.switter.ModelLayer.models.User;
+import com.fmahieu.switter.ModelLayer.models.UserResult;
+import com.fmahieu.switter.ModelLayer.models.httpModel.IsFollowingResult;
 
 public class UserActivityPresenter {
 
-    private UpdateProfileLogic mUpdateProfileLogic;
-    private UpdateUniqueUserLogic mUpdateUniqueUserLogic;
+    private ProfileLogic profileLogic;
+    private UserLogic userLogic;
 
     public UserActivityPresenter(){
-        mUpdateUniqueUserLogic = new UpdateUniqueUserLogic();
-        mUpdateProfileLogic = new UpdateProfileLogic();
+        userLogic = new UserLogic();
+        profileLogic = new ProfileLogic();
     }
 
-    // retrieve user data and fill user singleton
-    public void updateUserInfo(String handleString){
-
-        if(handleString.equals(Profile.getUserInstance().getHandle().getHandleString())){
-            mUpdateProfileLogic.updateProfile();
-        }
-        else{
-            mUpdateUniqueUserLogic.updateUniqueUserInfo();
-        }
-
-
-        setInstancesUp(handleString);
+    public UserResult getUserFromServer(String handle){
+        return userLogic.getUserFromServer(handle);
     }
 
-    // set the owner of the feed, story, following/ers singletons
-    public void setInstancesUp( String handleString ){
-
-        Handle handle = new Handle( handleString );
-        Feed.getFeedInstance().setFeedOwner( handle );
-        Story.getStoryInstance().setStoryOwner( handle );
-        Following.getFollowingInstance().setFollowingOwner( handle );
-        Followers.getFollowersInstance().setFollowersOwner( handle );
+    public MessageResult followUser(String handle){
+        return profileLogic.followUser(handle);
     }
 
-    public void followUser(){
-        mUpdateProfileLogic.followUser();
-    }
-
-    public void unFollowUser(){
-        mUpdateProfileLogic.unfollowUser();
+    public MessageResult unFollowUser(String handle){
+        return profileLogic.unfollowUser(handle);
 
     }
 
-    // check if profile follows user
-    public boolean isProfileFollowingUser(Handle handle){
-        return true;
+    public IsFollowingResult isProfileFollowingUser(String handle){
+        return profileLogic.isProfileFollowingUser(handle);
+    }
+
+    public User getUserFromJson(String jsonString){
+        return userLogic.getUserFromJson(jsonString);
+    }
+
+    public String getJsonFromUser(User user){
+        return userLogic.getJsonFromUser(user);
     }
 }

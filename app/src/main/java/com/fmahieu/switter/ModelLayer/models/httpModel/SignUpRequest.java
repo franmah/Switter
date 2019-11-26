@@ -1,17 +1,17 @@
-package com.fmahieu.switter.ModelLayer.models;
+package com.fmahieu.switter.ModelLayer.models.httpModel;
 
-import android.net.Uri;
+import com.fmahieu.switter.ModelLayer.models.EncodedProfilePicture;
 
 public class SignUpRequest {
 
-    private Uri profilePicture;
+    private EncodedProfilePicture profilePicture;
     private String firstName;
     private String lastName;
     private String handle;
     private String password;
     private String email;
 
-    public SignUpRequest(Uri profilePicture, String firstName, String lastName, String handle,
+    public SignUpRequest(EncodedProfilePicture profilePicture, String firstName, String lastName, String handle,
                          String password, String email) {
         this.profilePicture = profilePicture;
         this.firstName = firstName;
@@ -22,11 +22,11 @@ public class SignUpRequest {
     }
 
 
-    public Uri getProfilePicture() {
+    public EncodedProfilePicture getProfilePicture() {
         return profilePicture;
     }
 
-    public void setProfilePicture(Uri profilePicture) {
+    public void setProfilePicture(EncodedProfilePicture profilePicture) {
         this.profilePicture = profilePicture;
     }
 

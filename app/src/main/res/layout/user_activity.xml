@@ -5,71 +5,55 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="141dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingStart="10dp">
 
 
         <ImageView
             android:id="@+id/profilePic_imageView_userActivity"
-            android:layout_width="117dp"
-            android:layout_height="125dp"
+            android:layout_width="88dp"
+            android:layout_height="79dp"
+            android:layout_marginTop="10dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/followButton_button_userActivity"
-            android:layout_width="117dp"
-            android:layout_height="58dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp"
-            android:text="@string/followString_button_userActivity" />
+            <TextView
+                android:id="@+id/userName_textView_userActivity"
+                android:layout_width="324dp"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:textSize="18sp" />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/handle_textView_userActivity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingTop="1dp"
+                android:textSize="14sp" />
 
-    <TextView
-        android:id="@+id/userName_textView_userActivity"
-        android:layout_width="135dp"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="20dp"
-        android:text="@string/defaultNameString_textView_userActivity"
-        android:textSize="24sp" />
+            <Button
+                android:id="@+id/followButton_button_userActivity"
+                android:layout_width="117dp"
+                android:layout_height="37dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginTop="5dp"
+                android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/handle_textView_userActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="15dp"
-        android:text="@string/defaultHandleString_textView_userActivity"
-        android:textSize="18sp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp"
-        android:paddingTop="20dp">
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/followersNum_textView_userActivity"
-            android:layout_width="102dp"
-            android:layout_height="29dp"
-            android:text="@string/followersString_textView_userActivity"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/followingNum_textView_userActivity"
-            android:layout_width="133dp"
-            android:layout_height="29dp"
-            android:paddingLeft="10dp"
-            android:text="@string/followingString_textView_userActivity"
-            android:textSize="18sp" />
 
     </LinearLayout>
+
+
 
     <FrameLayout
         android:id="@+id/fragmentContainer_frameLayout_userActivity"

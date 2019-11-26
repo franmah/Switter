@@ -1,22 +1,22 @@
 package com.fmahieu.switter.Presenters;
 
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateFollowersLogic;
-import com.fmahieu.switter.ModelLayer.ApplicationLogic.UpdateFollowingLogic;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.FollowLogic;
+import com.fmahieu.switter.ModelLayer.models.FollowResult;
 
 public class FollowRecyclerPresenter {
 
-    private UpdateFollowingLogic mUpdateFollowingLogic;
-    private UpdateFollowersLogic mUpdateFollowersLogic;
+    private FollowLogic mFollowLogic;
 
     public FollowRecyclerPresenter(){
-        mUpdateFollowersLogic = new UpdateFollowersLogic();
-        mUpdateFollowingLogic = new UpdateFollowingLogic();
+        mFollowLogic = new FollowLogic();
     }
 
-    public void getFollowNextPage(){
-
+    public FollowResult getFollowingNextPage(String handle, String lastKey){
+        return mFollowLogic.getFollowingNextPage(handle, lastKey);
     }
 
-    public void getFollowersNextPage(){}
+    public FollowResult getFollowersNextPage(String handle, String lastKey){
+        return mFollowLogic.getFollowersNextPage(handle, lastKey);
+    }
 
 }

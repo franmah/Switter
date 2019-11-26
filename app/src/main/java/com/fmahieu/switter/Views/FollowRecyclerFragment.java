@@ -1,27 +1,22 @@
 package com.fmahieu.switter.Views;
 
 
-import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
-import com.fmahieu.switter.ModelLayer.models.Handle;
+import com.fmahieu.switter.ModelLayer.models.FollowResult;
 import com.fmahieu.switter.ModelLayer.models.User;
-import com.fmahieu.switter.ModelLayer.models.singleton.Followers;
-import com.fmahieu.switter.ModelLayer.models.singleton.Following;
-import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
+import com.fmahieu.switter.Presenters.FollowRecyclerPresenter;
 import com.fmahieu.switter.R;
 
 import java.util.ArrayList;
@@ -32,21 +27,27 @@ import java.util.List;
  */
 public class FollowRecyclerFragment extends Fragment {
     private final String TAG = "__FollowRecyclerFragment";
+
     private static final String SHOW_FOLLOWING =
             "com.fmahieu.switter.Views.followRecyclerFragment.showFollowing";
+    private static final String HANDLE_TO_DISPLAY =
+            "com.fmahieu.switter.Views.followRecyclerFragment.handleToDisplay";
 
     private RecyclerView followRecycler;
     private FollowRecyclerAdapter followAdapter;
 
     private boolean displayFollowing;
 
-    private Following mFollowing;
-    private Followers mFollowers;
+    private String followOwner;
+    private String lastKey = "";
+
+    private FollowRecyclerPresenter mFollowRecyclerPresenter = new FollowRecyclerPresenter();
 
 
-    public static Bundle createBundle(boolean shouldShowFollowing){
+    public static Bundle createBundle(boolean shouldShowFollowing, String handleToPass){
         Bundle bundle = new Bundle();
         bundle.putBoolean(SHOW_FOLLOWING, shouldShowFollowing);
+        bundle.putString(HANDLE_TO_DISPLAY, handleToPass);
         return bundle;
     }
 
@@ -63,24 +64,7 @@ public class FollowRecyclerFragment extends Fragment {
         View view = inflater.inflate(R.layout.follow_recycler_fragment, container, false);
 
         displayFollowing = this.getArguments().getBoolean(SHOW_FOLLOWING);
-
-        // TODO: REMOVE FAKE DATA:
-        // will only show profile
-        Profile profile = Profile.getUserInstance();
-        User user = new User("Mister", "following", new Handle("@following"), profile.getPicture());
-        List<User> tmpUserList = new ArrayList<>();
-        tmpUserList.add(user);
-        Following.getFollowingInstance().setUsers(tmpUserList);
-
-        User user2 = new User("Mister", "Follower", new Handle("@follower"), profile.getPicture());
-        List<User> tmpUserList2 = new ArrayList<>();
-        tmpUserList2.add(user2);
-        Followers.getFollowersInstance().setUsers(tmpUserList2);
-        // END OF DATA TO REMOVE
-
-
-        mFollowing = Following.getFollowingInstance();
-        mFollowers = Followers.getFollowersInstance();
+        followOwner = this.getArguments().getString(HANDLE_TO_DISPLAY);
 
         setUpWidgets(view);
 
@@ -94,63 +78,71 @@ public class FollowRecyclerFragment extends Fragment {
         followRecycler.setAdapter( followAdapter );
     }
 
+    private void startLoadingContentRequest(){
+        Log.i(TAG, "Starting AsyncTask");
+        makeToast("Loading more content");
+        new FollowContentRequester().execute();
+    }
 
-    private class FollowRecyclerHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        private User user;
-
-        private LinearLayout holderLayout;
-        private ImageView profilePicture;
-        private TextView userName;
-        private TextView handle;
-
-        public FollowRecyclerHolder(LayoutInflater inflater, ViewGroup parent){
-            super(inflater.inflate(R.layout.follow_holder, parent, false));
-
-            holderLayout = itemView.findViewById(R.id.linearLayout_followHolder);
-            profilePicture = itemView.findViewById(R.id.profilePicture_imageView_followHolder);
-            userName = itemView.findViewById(R.id.userName_textView_followHolder);
-            handle = itemView.findViewById(R.id.handle_textView_followHolder);
-
-            holderLayout.setOnClickListener(this);
+    private void loadContentRequest(FollowResult result){
+        if(result.getErrorMessage() !=  null){
+            Log.i(TAG, "Result came back with an error");
+            makeToast(result.getErrorMessage());
         }
-
-        public void bind(User user){
-            this.user = user;
-            profilePicture.setImageBitmap( user.getProfilePicture().getBitmapImage() );
-            userName.setText( new String(user.getFirstName() + user.getLastName()) );
-            handle.setText( user.getHandle().getHandleString() );
+        else if(result.getUsers() == null){
+            Log.i(TAG, "Result came back null");
+            makeToast("no more content to show");
         }
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = UserActivity.newIntent(getContext(), user.getHandle().getHandleString());
-            startActivity(intent);
-
+        else if(result.getUsers().size() == 0){
+            Log.i(TAG, "Result came back with an empty list");
+            makeToast("no more content to show");
+        }
+        else{
+            followAdapter.loadMoreContent(result.getUsers());
+            lastKey = result.getLastKey();
         }
     }
 
-    private class FollowRecyclerAdapter extends RecyclerView.Adapter<FollowRecyclerHolder>{
-        private List<User> users;
+
+    private class FollowRecyclerAdapter extends RecyclerView.Adapter<FollowHolder>{
+        boolean isLoadingAllowed;
+        private List<User> users = new ArrayList<>();
+
+        private final int LOAD_OFFSET = 1;
 
         public FollowRecyclerAdapter(){
-            if(displayFollowing){
-                users = mFollowing.getUsers();
-            }
-            else{
-                users = mFollowers.getUsers();
-            }
+
+            // force load the first page
+            startLoadingContentRequest();
+            isLoadingAllowed = false;
+
+            final LinearLayoutManager linearLayoutManager = (LinearLayoutManager)
+                    followRecycler.getLayoutManager();
+            followRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int numUsers = linearLayoutManager.getItemCount();
+                    int lastVisibleUser = linearLayoutManager.findLastVisibleItemPosition();
+                    if(numUsers - LOAD_OFFSET <= (lastVisibleUser) && lastKey != null){
+                        if(isLoadingAllowed) {
+                            isLoadingAllowed = false;
+                            startLoadingContentRequest();
+                        }
+                    }
+                }
+            });
         }
 
         @NonNull
         @Override
-        public FollowRecyclerHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
+        public FollowHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-            return new FollowRecyclerFragment.FollowRecyclerHolder(layoutInflater, viewGroup);
+            return new FollowHolder(layoutInflater, viewGroup, getContext());
         }
 
         @Override
-        public void onBindViewHolder(@NonNull FollowRecyclerFragment.FollowRecyclerHolder followRecyclerHolder, int i) {
+        public void onBindViewHolder(@NonNull FollowHolder followRecyclerHolder, int i) {
             followRecyclerHolder.bind(users.get(i));
 
         }
@@ -160,5 +152,57 @@ public class FollowRecyclerFragment extends Fragment {
             return users.size();
         }
 
+        public void loadMoreContent(final List<User> newUsers){
+            if(newUsers != null && newUsers.size() != 0){
+                users.addAll(newUsers);
+                followAdapter.notifyDataSetChanged();
+                isLoadingAllowed = true;
+            }
+            else{
+                makeToast("Something went wrong (sorry)");
+            }
+
+        }
+
+
     }
+
+    private void makeToast(String message){
+        Log.i(TAG, "making toast: " + message);
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+
+
+    private class FollowContentRequester extends AsyncTask<Void, Void, FollowResult> {
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected FollowResult doInBackground(Void... params){
+            Log.i(TAG, "fetchingMoreContent, starting request: owner: " + followOwner
+                    + ", lastKey: " + lastKey);
+
+            FollowResult response = null;
+
+            if(displayFollowing){
+                response = mFollowRecyclerPresenter.getFollowingNextPage(followOwner, lastKey);
+            }
+            else{
+                response = mFollowRecyclerPresenter.getFollowersNextPage(followOwner, lastKey);
+            }
+
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(FollowResult response){
+            loadContentRequest(response);
+        }
+    }
+
+
+
 }

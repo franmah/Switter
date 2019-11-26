@@ -37,12 +37,12 @@
 
     <!-- new_status_activity.xml -->
     <string name="editVideoString_newStatusActivity">Add video</string>
-    <string name="editPictureString_newStatusActivity">Add picture</string>
+    <string name="editPictureString_newStatusActivity">Add picture link</string>
     <string name="sendButtonString_newStatusActivity">Send</string>
 
     <!-- update_profile_picture_activity -->
-    <string name="checkBoxTextString_updateProfilePictureActivity">replace current profile picture</string>
-    <string name="selectPictureString_updateProfilePictureActivity">Select picture</string>
+    <string name="checkBoxTextString_updateProfilePictureActivity">replace current profile profilePicture</string>
+    <string name="selectPictureString_updateProfilePictureActivity">Select profilePicture</string>
     <string name="sendUpdatePicture_updateProfilePictureActivity">send</string>
 
     <!-- ResetPasswordActivity -->

@@ -2,28 +2,24 @@ package com.fmahieu.switter.ModelLayer.models;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
-public class Image {
+public class EncodedProfilePicture {
 
     String encodedImage;
 
-    public Image(){}
+    public EncodedProfilePicture(){}
 
-    public Image(String encodedImage) {
+    public EncodedProfilePicture(String encodedImage) {
         this.encodedImage = encodedImage;
     }
 
     /**
      * Turn bitmap image into a string
-     * @param filePath
      * @return
      */
     private String encodeImage(Bitmap bitmap) {
@@ -60,14 +56,18 @@ public class Image {
     }
 
     public void setBitmapImage(Bitmap bitmapImage){
-        encodedImage = encodeImage(bitmapImage);
+        if(bitmapImage == null){
+            this.encodedImage = null;
+        }
+        else{
+
+            encodedImage = encodeImage(bitmapImage);
+        }
 
     }
 
     public Bitmap getBitmapImage(){
         return decodeBase64AndSetImage();
     }
-
-
 
 }

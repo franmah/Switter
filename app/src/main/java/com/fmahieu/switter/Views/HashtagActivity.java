@@ -7,9 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.fmahieu.switter.ModelLayer.models.Hashtag;
-import com.fmahieu.switter.ModelLayer.models.Status;
-import com.fmahieu.switter.Presenters.HashtagActivityPresenter;
 import com.fmahieu.switter.R;
 
 public class HashtagActivity extends AppCompatActivity {
@@ -17,7 +14,7 @@ public class HashtagActivity extends AppCompatActivity {
     private static final String GET_HANDLE =
             "com.fmahieu.switter.views.hashtagActivity";
 
-    private HashtagActivityPresenter mHashtagActivityPresenter;
+    private String hashtagToShow;
 
     public static Intent newIntent(Context context, String hashtagToPass){
         Intent intent = new Intent(context, HashtagActivity.class);
@@ -30,15 +27,8 @@ public class HashtagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.hashtag_activity);
 
-        String hashtagToShow = getIntent().getStringExtra(GET_HANDLE);
-
-
-        setTitle(new String("Hashtag - " + hashtagToShow));
-
-        // update singleton HashtagFeed
-        mHashtagActivityPresenter = new HashtagActivityPresenter();
-        mHashtagActivityPresenter.updateHashtagFeed(hashtagToShow);
-
+        hashtagToShow = getIntent().getStringExtra(GET_HANDLE);
+        setTitle(hashtagToShow);
         getFragment();
 
     }
@@ -50,12 +40,12 @@ public class HashtagActivity extends AppCompatActivity {
 
         if(fragment == null){
             fragment = new StatusRecyclerFragment();
-            Bundle bundle = StatusRecyclerFragment.createDisplayHashtagFeedBundle(true);
+            Bundle bundle = StatusRecyclerFragment.createDisplayHashtagFeedBundle(hashtagToShow);
             fragment.setArguments(bundle);
             fragmentManager.beginTransaction().add(R.id.fragmentContainer_hashtagActivity, fragment).commit();
         }
         else{
-            Bundle bundle = StatusRecyclerFragment.createDisplayHashtagFeedBundle(true);
+            Bundle bundle = StatusRecyclerFragment.createDisplayHashtagFeedBundle(hashtagToShow);
             fragment.setArguments(bundle);
             fragmentManager.beginTransaction().replace(R.id.fragmentContainer_hashtagActivity, fragment).commit();
         }

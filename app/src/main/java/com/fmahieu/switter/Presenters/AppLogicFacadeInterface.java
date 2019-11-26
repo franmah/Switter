@@ -8,35 +8,29 @@ public interface AppLogicFacadeInterface {
     public void signUpUser();
     public void logUserOut();
 
-    /** UpdateProfileLogic **/
+    /** ProfileLogic **/
     public void setNewProfilePicture(boolean replaceProfilePicture);
     public void followUser();
     public void unfollowUser();
     public void updateProfile();
 
-    /** UpdateUniqueUserLogic **/
-    public void updaateUniqueUserInfo();
+    /** UniqueUserLogic **/
+    public void updateUniqueUserInfo();
 
     /** NewStatusLogic **/
     public void sendNewStatus();
 
-    /** UpdateFeedLogic **/
+    /** StatusContentLogic **/
     public void getFeed();
     public void getFeedNextPage();
 
-    /** UpdateStoryLogic **/
-    public void getStory();
-    public void getStoryNextPage();
 
     /** UpdateHashtagFeedLogic **/
     public void getHashtagFeed();
     public void getHashtagFeedNextPage();
 
-    /** UpdateFollowingLogic **/
-    public void getFollowing();
-    public void getFollowingNextPage();
 
-    /** UpdateFollowersLogic **/
+    /** FollowLogic **/
     public void getFollowers();
     public void getFollowersNextPage();
 

@@ -10,13 +10,14 @@ public class StatusFocus {
 
     private static StatusFocus sStatusFocus;
 
+    /*
     public static StatusFocus getStatusFocusInstance() {
         if (sStatusFocus == null){
             sStatusFocus = new StatusFocus();
         }
         return sStatusFocus;
     }
-
+*/
     private StatusFocus(){
         sStatusFocus = null;
     }

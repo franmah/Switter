@@ -32,6 +32,7 @@
         <activity android:name=".Views.SignUpInfoActivity" />
         <activity android:name=".Views.StatusActivity" />
         <activity android:name=".Views.UserActivity" />
+        <activity android:name=".Views.TxtViewActivity"/>
         <activity
             android:name=".Views.NewStatusActivity"
             android:theme="@style/AppTheme.PopOutActivityStyle" />

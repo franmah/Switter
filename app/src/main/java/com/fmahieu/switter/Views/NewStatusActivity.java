@@ -2,8 +2,10 @@ package com.fmahieu.switter.Views;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -13,8 +15,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.PictureLoader;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.PictureLoaderTask;
+import com.fmahieu.switter.ModelLayer.models.httpModel.LogOutRequest;
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 import com.fmahieu.switter.Presenters.NewStatusPresenter;
 import com.fmahieu.switter.R;
@@ -23,21 +29,17 @@ public class NewStatusActivity extends AppCompatActivity implements View.OnClick
 
     private final String TAG = "__NewStatusActivity";
 
-
-    // used to access storage to upload picture
-    private static final int READ_REQUEST_CODE = 42;
     private static boolean isImage = false;
 
     private Profile mProfile;
     private NewStatusPresenter mNewStatusPresenter;
 
+
     private ImageView mProfilePic;
     private TextView mHandle;
     private EditText mMessage;
-    private VideoView mVideoAttachment;
-    private TextView mEditVideo;
-    private ImageView mImageAttachment;
-    private TextView mEditImage;
+    private EditText mEditImage;
+    private EditText mEditTxtLink;
     private Button mSendButton;
 
     @Override
@@ -63,18 +65,16 @@ public class NewStatusActivity extends AppCompatActivity implements View.OnClick
         mProfilePic = findViewById(R.id.profilePic_ImageView_newStatusActivity);
         mHandle = findViewById(R.id.handle_textView_newStatusActivity);
         mMessage = findViewById(R.id.message_editText_newStatusActivity);
-        mVideoAttachment = findViewById(R.id.videoHolder_videoView_newStatusActivity);
-        mEditVideo = findViewById(R.id.videoEdit_textView_newStatusActivity);
-        mImageAttachment = findViewById(R.id.imageHolder_imageView_newStatusActivity);
         mEditImage = findViewById(R.id.imageEdit_textView_newStatusActivity);
+        mEditTxtLink = findViewById(R.id.txtLink_editText_newStatusActivity);
         mSendButton = findViewById(R.id.sendButton_newStatusActivity);
 
-        mProfilePic.setImageBitmap(mProfile.getPicture().getBitmapImage());
-        mHandle.setText(mProfile.getHandle().getHandleString());
+        //PictureLoader.loadPictureLink(this, mProfile.getProfilePictureLink().getLink(), mProfilePic);
+        new PictureLoaderTask(mProfilePic, mProfile.getProfilePictureLink().getLink()).execute();
+        mHandle.setText(mProfile.getHandle());
 
-        mEditVideo.setOnClickListener(this);
-        mEditVideo.setOnClickListener(this);
         mEditImage.setOnClickListener(this);
+        mEditTxtLink.setOnClickListener(this);
         mSendButton.setOnClickListener(this);
 
     }
@@ -85,53 +85,40 @@ public class NewStatusActivity extends AppCompatActivity implements View.OnClick
 
         if( id == R.id.imageEdit_textView_newStatusActivity ){
             isImage = true;
-            selectAttachmentInStorage("image/*");
+            Log.i("__TESTING____", "is image set to true");
         }
-        else if( id == R.id.videoEdit_textView_newStatusActivity){
+        else if( id == R.id.txtLink_editText_newStatusActivity){
+            Log.i("__TESTING____", "is image set to false");
             isImage = false;
-            selectAttachmentInStorage("video/*");
         }
         else if( id == R.id.sendButton_newStatusActivity ){
-            mNewStatusPresenter.sendNewStatus();
+            // send request on simple new thread
+            Log.i(TAG, "sending new status on another thread...");
+            String attachmentLink = null;
+            if(isImage){
+                attachmentLink = mEditImage.getText().toString();
+                Log.i("__TESING", "in newStatusAcitivty: link: " + mEditImage.getText().toString());
+            }
+            else{
+                attachmentLink = mEditTxtLink.getText().toString();
+            }
+
+            final String link = attachmentLink;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    mNewStatusPresenter.sendNewStatus(link,
+                            mMessage.getText().toString());
+                }
+            }).start();
             finish();
         }
     }
 
-    /** GET PICTURE **/
-    private void selectAttachmentInStorage(String attachmentType){
-        Log.i(TAG, "selecting picture from storage");
 
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType(attachmentType); // * means any type of picture
-        startActivityForResult(intent, READ_REQUEST_CODE);
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-
-        // The ACTION_OPEN_DOCUMENT intent was sent with the request code
-        // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
-        // response to some other intent, and the code below shouldn't run at all.
-
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // The document selected by the user won't be returned in the intent.
-            // Instead, a URI to that document will be contained in the return intent
-            // provided to this method as a parameter.
-            // Pull that URI using resultData.getData().
-            Uri uri = null;
-            if (resultData != null) {
-                uri = resultData.getData();
-                Log.i(TAG, "Uri: " + uri.toString());
-
-                if( isImage ){
-                 mImageAttachment.setImageURI(uri);
-                }
-                else{
-                    mVideoAttachment.setVideoURI(uri);
-                }
-            }
-        }
+    private void makeToast(String message){
+        Log.i(TAG, "making toast: " + message);
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
     }
 }

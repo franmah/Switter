@@ -13,7 +13,7 @@ import com.amazonaws.mobile.client.results.SignUpResult;
 import com.amazonaws.mobile.client.results.UserCodeDeliveryDetails;
 
 import com.fmahieu.switter.ModelLayer.models.SignInRequest;
-import com.fmahieu.switter.ModelLayer.models.SignUpRequest;
+import com.fmahieu.switter.ModelLayer.models.httpModel.SignUpRequest;
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 
 import java.util.HashMap;
@@ -31,7 +31,6 @@ public class AwsAuthentication {
         attributes.put("email", request.getEmail());
 
         Log.i(TAG,"email: "+ request.getEmail());
-
 
         // Code from amplify
         AWSMobileClient.getInstance().signUp(username, password, attributes, null, new Callback<SignUpResult>() {
@@ -88,9 +87,9 @@ public class AwsAuthentication {
         });
     }
 
-    public void SignUserIn(SignInRequest request){
+    public void SignUserIn(SignInRequest request) {
 
-        String username = request.getUsername();
+        String username = request.getHandle();
         String password = request.getPassword();
 
         AWSMobileClient.getInstance().signIn(username, password, null, new Callback<SignInResult>() {

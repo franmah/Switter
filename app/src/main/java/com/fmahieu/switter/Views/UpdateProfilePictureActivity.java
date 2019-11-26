@@ -2,7 +2,10 @@ package com.fmahieu.switter.Views;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -14,6 +17,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.PictureLoader;
+import com.fmahieu.switter.ModelLayer.ApplicationLogic.PictureLoaderTask;
+import com.fmahieu.switter.ModelLayer.models.EncodedProfilePicture;
+import com.fmahieu.switter.ModelLayer.models.MessageResult;
 import com.fmahieu.switter.ModelLayer.models.singleton.Profile;
 import com.fmahieu.switter.Presenters.UpdateProfilePicturePresenter;
 import com.fmahieu.switter.R;
@@ -21,7 +28,7 @@ import com.fmahieu.switter.R;
 public class UpdateProfilePictureActivity extends AppCompatActivity implements View.OnClickListener{
     private final String TAG = "__UpdateProfilePictureActivity";
 
-    // used to access storage to upload picture
+    // used to access storage to upload attachedPicture
     private static final int READ_REQUEST_CODE = 42;
 
     Profile mProfile;
@@ -32,8 +39,11 @@ public class UpdateProfilePictureActivity extends AppCompatActivity implements V
     private TextView selectPictureTextView;
     private Button mSendButton;
 
+    private EncodedProfilePicture image = new EncodedProfilePicture();
+
     private boolean isTextBoxChecked = false;
     private Uri picturePath;
+    private String encodedImage;
 
 
     @Override
@@ -63,12 +73,12 @@ public class UpdateProfilePictureActivity extends AppCompatActivity implements V
         selectPictureTextView = findViewById( R.id.selectNewPicture_TextView_updateProfilePictureActivity );
         mSendButton = findViewById( R.id.sendButton_updateProfilePictureActivity );
 
-        profilePicture.setImageBitmap(mProfile.getPicture().getBitmapImage());
+        //PictureLoader.loadPictureLink(this, mProfile.getProfilePictureLink().getLink(), profilePicture);
+        new PictureLoaderTask(profilePicture, mProfile.getProfilePictureLink().getLink());
 
         selectPictureTextView.setOnClickListener( this );
         updatePictureCheckBox.setOnClickListener( this );
         mSendButton.setOnClickListener( this );
-
     }
 
     @Override
@@ -83,16 +93,18 @@ public class UpdateProfilePictureActivity extends AppCompatActivity implements V
         }
         else if( id == R.id.sendButton_updateProfilePictureActivity ) {
             if ( picturePath != null ) {
-                if( isTextBoxChecked ) {
-                    mUpdateProfilePicturePresenter.updateCurrentProfilePicture( picturePath );
+                try{
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), picturePath );
+                    image.setBitmapImage(bitmap);
+                    new SendPictureTask().execute();
+
                 }
-                else{
-                    mUpdateProfilePicturePresenter.addPictureToProfileList( picturePath );
+                catch (Exception e){
+                    Log.i(TAG, "Error while converting uri to bitmap");
                 }
-                finish();
             }
             else{
-                makeToast( "Select a new picture" );
+                makeToast( "Select a new attachedPicture" );
             }
         }
 
@@ -107,11 +119,11 @@ public class UpdateProfilePictureActivity extends AppCompatActivity implements V
 
     /** GET PICTURE **/
     private void selectPictureInStorage(){
-        Log.i(TAG, "selecting picture from storage");
+        Log.i(TAG, "selecting attachedPicture from storage");
 
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.setType("image/*"); // * means any type of picture
+        intent.setType("image/*"); // * means any type of attachedPicture
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
@@ -138,4 +150,33 @@ public class UpdateProfilePictureActivity extends AppCompatActivity implements V
         }
     }
 
+    public void onServerResult(MessageResult result){
+        if(result.getError() != null){
+            makeToast(result.getError());
+        }
+        else{
+            // the profile attachedPicture is updated in the logic layer
+            finish();
+        }
+    }
+
+    private class SendPictureTask extends AsyncTask<Void, Void, MessageResult> {
+
+        @Override
+        protected MessageResult doInBackground(Void... params){
+            if( isTextBoxChecked ) {
+                return mUpdateProfilePicturePresenter.updateCurrentProfilePicture( image );
+            }
+            else{
+                return mUpdateProfilePicturePresenter.addPictureToProfileList( image );
+            }
+
+
+        }
+
+        @Override
+        protected void onPostExecute(MessageResult response){
+            onServerResult(response);
+        }
+    }
 }
